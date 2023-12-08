@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/art/social-card.png" alt="Social Card of Negar">
+    <img src="/art/social-card-rounded.png" alt="Social Card of Negar">
 </p>
 
 ### Negar
