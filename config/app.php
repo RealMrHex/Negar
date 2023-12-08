@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -70,7 +70,21 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Text Direction
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option determines the default text direction for your
+    | application, which is used for RTL (right-to-left) or LTR (left-to-right)
+    | text rendering. You can set it to 'rtl' or 'ltr' as needed.
+    |
+    | Supported values: 'rtl' for right-to-left, 'ltr' for left-to-right.
+    |
+    */
+    'dir'      => env('APP_DIR', 'ltr'), // You can change this to 'rtl' if needed.
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +97,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => env('APP_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +110,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
@@ -132,7 +146,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | These configuration options determine the driver used to determine and
-    | manage Laravel's "maintenance mode" status. The "cache" driver will
+    | manage Laravel "maintenance mode" status. The "cache" driver will
     | allow maintenance mode to be controlled across multiple machines.
     |
     | Supported drivers: "file", "cache"
@@ -155,20 +169,22 @@ return [
     |
     */
 
-    'providers' => ServiceProvider::defaultProviders()->merge([
-        /*
-         * Package Service Providers...
-         */
+    'providers' => ServiceProvider::defaultProviders()->merge(
+        [
+            /*
+             * Package Service Providers...
+             */
 
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-    ])->toArray(),
+            /*
+             * Application Service Providers...
+             */
+            App\Providers\AppServiceProvider::class,
+            App\Providers\AuthServiceProvider::class,
+            // App\Providers\BroadcastServiceProvider::class,
+            App\Providers\EventServiceProvider::class,
+            App\Providers\RouteServiceProvider::class,
+        ]
+    )->toArray(),
 
     /*
     |--------------------------------------------------------------------------
@@ -177,12 +193,14 @@ return [
     |
     | This array of class aliases will be registered when this application
     | is started. However, feel free to register as many as you wish as
-    | the aliases are "lazy" loaded so they don't hinder performance.
+    | the aliases are "lazy" loaded, so they don't hinder performance.
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
+    'aliases' => Facade::defaultAliases()->merge(
+        [
+            // 'Example' => App\Facades\Example::class,
+        ]
+    )->toArray(),
 
 ];
