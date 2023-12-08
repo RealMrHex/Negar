@@ -1,0 +1,27 @@
+{
+    "name": "realmrhex/panel-module",
+    "description": "Panel module by Armin Hooshmand",
+    "authors": [
+        {
+            "name": "Armin Hooshmand",
+            "email": "RealMrHex@gmail.com"
+        }
+    ],
+    "require": {
+        "filament/filament": "^3.0",
+        "realmrhex/filament-modular-v3": "v0.1.5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Panel\\": ""
+        }
+    }
+}

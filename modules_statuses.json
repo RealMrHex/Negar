@@ -2,5 +2,8 @@
     "Base": true,
     "Core": true,
     "Crashlytic": true,
-    "Support": true
+    "Support": true,
+    "Panel": true,
+    "Security": true,
+    "User": true
 }
