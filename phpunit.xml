@@ -6,15 +6,21 @@
 >
     <testsuites>
         <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+            <directory>modules/*/tests/Unit</directory>
+            <directory>themes/*/tests/Unit</directory>
         </testsuite>
         <testsuite name="Feature">
-            <directory>tests/Feature</directory>
+            <directory>modules/*/tests/Feature</directory>
+            <directory>themes/*/tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
             <directory>app</directory>
+            <directory>modules</directory>
+            <directory>modules/*</directory>
+            <directory>themes</directory>
+            <directory>themes/*</directory>
         </include>
     </source>
     <php>
