@@ -7,7 +7,9 @@
     "description": "Support module by Armin Hooshmand",
     "keywords": [],
     "priority": 3,
-    "providers": [],
+    "providers": [
+        "Modules\\Support\\Providers\\SupportServiceProvider"
+    ],
     "files": [
         "Helpers/V1/helpers.php"
     ]

@@ -4,10 +4,8 @@ namespace Modules\Support\Traits\V1\CleanResource;
 
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 use ReflectionClass;
 use function Filament\Support\get_model_label;
-use function Filament\Support\locale_has_pluralization;
 
 trait CleanResource
 {
@@ -19,7 +17,7 @@ trait CleanResource
     public static function getSchema(): string
     {
         $_schemaName = str(class_basename(get_called_class()))->replaceLast('Resource', '')->append('Schema')->toString();
-        $_schema = get_called_class() . '\\Schema\\' . $_schemaName;
+        $_schema     = get_called_class() . '\\Schema\\' . $_schemaName;
         return class_exists($_schema) ? $_schema : static::$schema;
     }
 
@@ -112,7 +110,11 @@ trait CleanResource
      */
     public static function getModelLabel(): string
     {
-        return __(Str::of(static::modelLabel())->ucfirst()->toString());
+        $version  = config('framework.max_versioned_file', (static::$version ?? 1));
+        $module   = str(class_basename(get_called_class()))->replaceLast('Resource', '')->lower()->toString();
+        $singular = static::modelLabel();
+
+        return __("v$version.$module::filament.resource.$singular.singular");
     }
 
     /**
@@ -122,13 +124,11 @@ trait CleanResource
      */
     public static function getPluralModelLabel(): string
     {
-        if (filled($label = static::$pluralModelLabel ?? static::getPluralLabel()))
-            return __($label);
+        $version  = config('framework.max_versioned_file', (static::$version ?? 1));
+        $module   = str(class_basename(get_called_class()))->replaceLast('Resource', '')->lower()->toString();
+        $singular = static::modelLabel();
 
-        if (locale_has_pluralization())
-            return __(Str::of(static::modelLabel())->plural()->ucfirst()->toString());
-
-        return static::getModelLabel();
+        return __("v$version.$module::filament.resource.$singular.plural");
     }
     #endregion
 }

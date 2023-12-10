@@ -52,19 +52,19 @@ class RoleResource extends Resource implements HasShieldPermissions
                                             ->schema(
                                                 [
                                                     TextInput::make('name')
-                                                             ->label(__('filament-shield::filament-shield.field.name'))
+                                                             ->modularLabel('security')
                                                              ->unique(ignoreRecord: true)
                                                              ->required()
                                                              ->maxLength(255),
 
                                                     TextInput::make('display_name')
-                                                             ->translateLabel()
+                                                             ->modularLabel('security')
                                                              ->unique(ignoreRecord: true)
                                                              ->required()
                                                              ->maxLength(255),
 
                                                     TextInput::make('guard_name')
-                                                             ->label(__('filament-shield::filament-shield.field.guard_name'))
+                                                             ->modularLabel('security')
                                                              ->default(Utils::getFilamentAuthGuard())
                                                              ->nullable()
                                                              ->maxLength(255),
@@ -91,134 +91,136 @@ class RoleResource extends Resource implements HasShieldPermissions
                              ),
                          Forms\Components\Tabs::make('Permissions')
                                               ->contained()
-                                              ->tabs([
-                                                         Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.resources'))
-                                                                                  ->visible(fn(): bool => (bool)Utils::isResourceEntityEnabled())
-                                                                                  ->badge(static::getResourceTabBadgeCount())
-                                                                                  ->schema([
-                                                                                               Grid::make()
-                                                                                                   ->schema(static::getResourceEntitiesSchema())
-                                                                                                   ->columns(FilamentShieldPlugin::get()->getGridColumns()),
-                                                                                           ]),
-                                                         Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.pages'))
-                                                                                  ->visible(fn(): bool => (bool)Utils::isPageEntityEnabled() && (count(FilamentShield::getPages()) > 0 ? true : false))
-                                                                                  ->badge(count(static::getPageOptions()))
-                                                                                  ->schema([
-                                                                                               Forms\Components\CheckboxList::make('pages_tab')
-                                                                                                                            ->label('')
-                                                                                                                            ->options(fn(): array => static::getPageOptions())
-                                                                                                                            ->searchable()
-                                                                                                                            ->live()
-                                                                                                                            ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
-                                                                                                                            {
-                                                                                                                                static::setPermissionStateForRecordPermissions(
-                                                                                                                                    component  : $component,
-                                                                                                                                    operation  : $operation,
-                                                                                                                                    permissions: static::getPageOptions(),
-                                                                                                                                    record     : $record
-                                                                                                                                );
-                                                                                                                                static::toggleSelectAllViaEntities($livewire, $set);
-                                                                                                                            })
-                                                                                                                            ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
-                                                                                                                            ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action   : $action,
-                                                                                                                                component: $component,
-                                                                                                                                livewire : $livewire,
-                                                                                                                                set      : $set
-                                                                                                                            ))
-                                                                                                                            ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action    : $action,
-                                                                                                                                component : $component,
-                                                                                                                                livewire  : $livewire,
-                                                                                                                                set       : $set,
-                                                                                                                                resetState: true
-                                                                                                                            ))
-                                                                                                                            ->dehydrated(fn($state) => blank($state) ? false : true)
-                                                                                                                            ->bulkToggleable()
-                                                                                                                            ->gridDirection('row')
-                                                                                                                            ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
-                                                                                                                            ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
-                                                                                           ]),
-                                                         Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.widgets'))
-                                                                                  ->visible(fn(): bool => (bool)Utils::isWidgetEntityEnabled() && (count(FilamentShield::getWidgets()) > 0 ? true : false))
-                                                                                  ->badge(count(static::getWidgetOptions()))
-                                                                                  ->schema([
-                                                                                               Forms\Components\CheckboxList::make('widgets_tab')
-                                                                                                                            ->label('')
-                                                                                                                            ->options(fn(): array => static::getWidgetOptions())
-                                                                                                                            ->searchable()
-                                                                                                                            ->live()
-                                                                                                                            ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
-                                                                                                                            {
-                                                                                                                                static::setPermissionStateForRecordPermissions(
-                                                                                                                                    component  : $component,
-                                                                                                                                    operation  : $operation,
-                                                                                                                                    permissions: static::getWidgetOptions(),
-                                                                                                                                    record     : $record
-                                                                                                                                );
+                                              ->tabs(
+                                                  [
+                                                      Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.resources'))
+                                                                               ->visible(fn(): bool => (bool)Utils::isResourceEntityEnabled())
+                                                                               ->badge(static::getResourceTabBadgeCount())
+                                                                               ->schema([
+                                                                                            Grid::make()
+                                                                                                ->schema(static::getResourceEntitiesSchema())
+                                                                                                ->columns(FilamentShieldPlugin::get()->getGridColumns()),
+                                                                                        ]),
+                                                      Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.pages'))
+                                                                               ->visible(fn(): bool => (bool)Utils::isPageEntityEnabled() && (count(FilamentShield::getPages()) > 0 ? true : false))
+                                                                               ->badge(count(static::getPageOptions()))
+                                                                               ->schema([
+                                                                                            Forms\Components\CheckboxList::make('pages_tab')
+                                                                                                                         ->label('')
+                                                                                                                         ->options(fn(): array => static::getPageOptions())
+                                                                                                                         ->searchable()
+                                                                                                                         ->live()
+                                                                                                                         ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
+                                                                                                                         {
+                                                                                                                             static::setPermissionStateForRecordPermissions(
+                                                                                                                                 component  : $component,
+                                                                                                                                 operation  : $operation,
+                                                                                                                                 permissions: static::getPageOptions(),
+                                                                                                                                 record     : $record
+                                                                                                                             );
+                                                                                                                             static::toggleSelectAllViaEntities($livewire, $set);
+                                                                                                                         })
+                                                                                                                         ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
+                                                                                                                         ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action   : $action,
+                                                                                                                             component: $component,
+                                                                                                                             livewire : $livewire,
+                                                                                                                             set      : $set
+                                                                                                                         ))
+                                                                                                                         ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action    : $action,
+                                                                                                                             component : $component,
+                                                                                                                             livewire  : $livewire,
+                                                                                                                             set       : $set,
+                                                                                                                             resetState: true
+                                                                                                                         ))
+                                                                                                                         ->dehydrated(fn($state) => blank($state) ? false : true)
+                                                                                                                         ->bulkToggleable()
+                                                                                                                         ->gridDirection('row')
+                                                                                                                         ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
+                                                                                                                         ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
+                                                                                        ]),
+                                                      Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.widgets'))
+                                                                               ->visible(fn(): bool => (bool)Utils::isWidgetEntityEnabled() && (count(FilamentShield::getWidgets()) > 0 ? true : false))
+                                                                               ->badge(count(static::getWidgetOptions()))
+                                                                               ->schema([
+                                                                                            Forms\Components\CheckboxList::make('widgets_tab')
+                                                                                                                         ->label('')
+                                                                                                                         ->options(fn(): array => static::getWidgetOptions())
+                                                                                                                         ->searchable()
+                                                                                                                         ->live()
+                                                                                                                         ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
+                                                                                                                         {
+                                                                                                                             static::setPermissionStateForRecordPermissions(
+                                                                                                                                 component  : $component,
+                                                                                                                                 operation  : $operation,
+                                                                                                                                 permissions: static::getWidgetOptions(),
+                                                                                                                                 record     : $record
+                                                                                                                             );
 
-                                                                                                                                static::toggleSelectAllViaEntities($livewire, $set);
-                                                                                                                            })
-                                                                                                                            ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
-                                                                                                                            ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action   : $action,
-                                                                                                                                component: $component,
-                                                                                                                                livewire : $livewire,
-                                                                                                                                set      : $set
-                                                                                                                            ))
-                                                                                                                            ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action    : $action,
-                                                                                                                                component : $component,
-                                                                                                                                livewire  : $livewire,
-                                                                                                                                set       : $set,
-                                                                                                                                resetState: true
-                                                                                                                            ))
-                                                                                                                            ->dehydrated(fn($state) => blank($state) ? false : true)
-                                                                                                                            ->bulkToggleable()
-                                                                                                                            ->gridDirection('row')
-                                                                                                                            ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
-                                                                                                                            ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
-                                                                                           ]),
-                                                         Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.custom'))
-                                                                                  ->visible(fn(): bool => (bool)Utils::isCustomPermissionEntityEnabled() && (count(static::getCustomEntities()) > 0 ? true : false))
-                                                                                  ->badge(count(static::getCustomPermissionOptions()))
-                                                                                  ->schema([
-                                                                                               Forms\Components\CheckboxList::make('custom_permissions')
-                                                                                                                            ->label('')
-                                                                                                                            ->options(fn(): array => static::getCustomPermissionOptions())
-                                                                                                                            ->searchable()
-                                                                                                                            ->live()
-                                                                                                                            ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
-                                                                                                                            {
-                                                                                                                                static::setPermissionStateForRecordPermissions(
-                                                                                                                                    component  : $component,
-                                                                                                                                    operation  : $operation,
-                                                                                                                                    permissions: static::getCustomPermissionOptions(),
-                                                                                                                                    record     : $record
-                                                                                                                                );
-                                                                                                                                static::toggleSelectAllViaEntities($livewire, $set);
-                                                                                                                            })
-                                                                                                                            ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
-                                                                                                                            ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action   : $action,
-                                                                                                                                component: $component,
-                                                                                                                                livewire : $livewire,
-                                                                                                                                set      : $set
-                                                                                                                            ))
-                                                                                                                            ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
-                                                                                                                                action    : $action,
-                                                                                                                                component : $component,
-                                                                                                                                livewire  : $livewire,
-                                                                                                                                set       : $set,
-                                                                                                                                resetState: true
-                                                                                                                            ))
-                                                                                                                            ->dehydrated(fn($state) => blank($state) ? false : true)
-                                                                                                                            ->bulkToggleable()
-                                                                                                                            ->gridDirection('row')
-                                                                                                                            ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
-                                                                                                                            ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
-                                                                                           ]),
-                                                     ])
+                                                                                                                             static::toggleSelectAllViaEntities($livewire, $set);
+                                                                                                                         })
+                                                                                                                         ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
+                                                                                                                         ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action   : $action,
+                                                                                                                             component: $component,
+                                                                                                                             livewire : $livewire,
+                                                                                                                             set      : $set
+                                                                                                                         ))
+                                                                                                                         ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action    : $action,
+                                                                                                                             component : $component,
+                                                                                                                             livewire  : $livewire,
+                                                                                                                             set       : $set,
+                                                                                                                             resetState: true
+                                                                                                                         ))
+                                                                                                                         ->dehydrated(fn($state) => blank($state) ? false : true)
+                                                                                                                         ->bulkToggleable()
+                                                                                                                         ->gridDirection('row')
+                                                                                                                         ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
+                                                                                                                         ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
+                                                                                        ]
+                                                                               ),
+                                                      Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.custom'))
+                                                                               ->visible(fn(): bool => (bool)Utils::isCustomPermissionEntityEnabled() && (count(static::getCustomEntities()) > 0 ? true : false))
+                                                                               ->badge(count(static::getCustomPermissionOptions()))
+                                                                               ->schema([
+                                                                                            Forms\Components\CheckboxList::make('custom_permissions')
+                                                                                                                         ->label('')
+                                                                                                                         ->options(fn(): array => static::getCustomPermissionOptions())
+                                                                                                                         ->searchable()
+                                                                                                                         ->live()
+                                                                                                                         ->afterStateHydrated(function (Component $component, $livewire, string $operation, ?Model $record, Forms\Set $set)
+                                                                                                                         {
+                                                                                                                             static::setPermissionStateForRecordPermissions(
+                                                                                                                                 component  : $component,
+                                                                                                                                 operation  : $operation,
+                                                                                                                                 permissions: static::getCustomPermissionOptions(),
+                                                                                                                                 record     : $record
+                                                                                                                             );
+                                                                                                                             static::toggleSelectAllViaEntities($livewire, $set);
+                                                                                                                         })
+                                                                                                                         ->afterStateUpdated(fn($livewire, Forms\Set $set) => static::toggleSelectAllViaEntities($livewire, $set))
+                                                                                                                         ->selectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action   : $action,
+                                                                                                                             component: $component,
+                                                                                                                             livewire : $livewire,
+                                                                                                                             set      : $set
+                                                                                                                         ))
+                                                                                                                         ->deselectAllAction(fn(FormAction $action, Component $component, $livewire, Forms\Set $set) => static::bulkToggleableAction(
+                                                                                                                             action    : $action,
+                                                                                                                             component : $component,
+                                                                                                                             livewire  : $livewire,
+                                                                                                                             set       : $set,
+                                                                                                                             resetState: true
+                                                                                                                         ))
+                                                                                                                         ->dehydrated(fn($state) => blank($state) ? false : true)
+                                                                                                                         ->bulkToggleable()
+                                                                                                                         ->gridDirection('row')
+                                                                                                                         ->columns(FilamentShieldPlugin::get()->getCheckboxListColumns())
+                                                                                                                         ->columnSpan(FilamentShieldPlugin::get()->getCheckboxListColumnSpan()),
+                                                                                        ]),
+                                                  ])
                                               ->columnSpan('full'),
                      ])
         ;
@@ -229,22 +231,32 @@ class RoleResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('name')
-                                                   ->badge()
-                                                   ->label(__('filament-shield::filament-shield.column.name'))
+                                                   ->modularLabel('security')
                                                    ->formatStateUsing(fn($state): string => Str::headline($state))
                                                    ->colors(['primary'])
                                                    ->searchable(),
-                          Tables\Columns\TextColumn::make('guard_name')
+
+                          Tables\Columns\TextColumn::make('display_name')
                                                    ->badge()
-                                                   ->label(__('filament-shield::filament-shield.column.guard_name')),
+                                                   ->modularLabel('security')
+                                                   ->formatStateUsing(fn($state): string => Str::headline($state))
+                                                   ->colors(['primary'])
+                                                   ->searchable(),
+
+                          Tables\Columns\TextColumn::make('guard_name')
+                                                   ->modularLabel('security'),
+
                           Tables\Columns\TextColumn::make('permissions_count')
                                                    ->badge()
                                                    ->label(__('filament-shield::filament-shield.column.permissions'))
                                                    ->counts('permissions')
                                                    ->colors(['success']),
+
                           Tables\Columns\TextColumn::make('updated_at')
                                                    ->label(__('filament-shield::filament-shield.column.updated_at'))
-                                                   ->dateTime(),
+                                                   ->jalaliDate()
+                                                   ->tooltip(fn(Model $record): string => jdate($record->created_at)->ago())
+                          ,
                       ])
             ->filters([
                           //
@@ -320,7 +332,7 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     public static function getSlug(): string
     {
-        return 'foo';
+        return 'access-policy';
     }
 
     public static function getNavigationBadge(): ?string

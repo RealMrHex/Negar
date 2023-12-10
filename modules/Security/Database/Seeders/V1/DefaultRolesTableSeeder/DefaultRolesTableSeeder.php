@@ -18,7 +18,9 @@ class DefaultRolesTableSeeder extends BaseDatabaseSeeder
         $this
             ->sudo()
             ->manager()
-            ->user()
+            ->teacher()
+            ->parent()
+            ->student()
         ;
     }
 
@@ -32,7 +34,7 @@ class DefaultRolesTableSeeder extends BaseDatabaseSeeder
         v1_role()->create(
             [
                 RoleFields::NAME         => 'sudo',
-                RoleFields::DISPLAY_NAME => __('Sudo Access'),
+                RoleFields::DISPLAY_NAME => __('v1.security::role.sudo.display_name'),
                 RoleFields::GUARD_NAME   => 'web',
             ]
         );
@@ -53,7 +55,7 @@ class DefaultRolesTableSeeder extends BaseDatabaseSeeder
         v1_role()->create(
             [
                 RoleFields::NAME         => 'manager',
-                RoleFields::DISPLAY_NAME => __('Manager Access'),
+                RoleFields::DISPLAY_NAME => __('v1.security::role.manager.display_name'),
                 RoleFields::GUARD_NAME   => 'web',
             ]
         );
@@ -64,16 +66,52 @@ class DefaultRolesTableSeeder extends BaseDatabaseSeeder
     }
 
     /**
-     * Create User roles
+     * Create Teacher roles
      *
-     * @return void
+     * @return self
      */
-    private function user(): void
+    private function teacher(): self
     {
         v1_role()->create(
             [
-                RoleFields::NAME         => 'user',
-                RoleFields::DISPLAY_NAME => __('User Access'),
+                RoleFields::NAME         => 'teacher',
+                RoleFields::DISPLAY_NAME => __('v1.security::role.teacher.display_name'),
+                RoleFields::GUARD_NAME   => 'web',
+            ]
+        );
+
+        return $this;
+    }
+
+    /**
+     * Create Parent roles
+     *
+     * @return self
+     */
+    private function parent(): self
+    {
+        v1_role()->create(
+            [
+                RoleFields::NAME         => 'parent',
+                RoleFields::DISPLAY_NAME => __('v1.security::role.parent.display_name'),
+                RoleFields::GUARD_NAME   => 'web',
+            ]
+        );
+
+        return $this;
+    }
+
+    /**
+     * Create Student roles
+     *
+     * @return void
+     */
+    private function student(): void
+    {
+        v1_role()->create(
+            [
+                RoleFields::NAME         => 'student',
+                RoleFields::DISPLAY_NAME => __('v1.security::role.student.display_name'),
                 RoleFields::GUARD_NAME   => 'web',
             ]
         );

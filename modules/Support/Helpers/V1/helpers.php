@@ -4,6 +4,7 @@ if (!function_exists('disk'))
 {
     /**
      * Get the default disk name
+     *
      * @return string
      */
     function disk(): string

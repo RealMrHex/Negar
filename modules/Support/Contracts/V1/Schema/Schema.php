@@ -9,6 +9,16 @@ use Filament\Tables\Actions\EditAction;
 abstract class Schema
 {
     /**
+     * Get the current module
+     *
+     * @return string
+     */
+    protected static function module(): string
+    {
+        return str(class_basename(get_called_class()))->replaceLast('Schema', '')->lower()->toString();
+    }
+
+    /**
      * Design the form schema
      *
      * @return array

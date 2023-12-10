@@ -18,16 +18,20 @@ return [
     ],
 
     'account_type' => [
-        'user'    => 'کاربر',
-        'manager' => 'مدیر',
         'system'  => 'سیستم',
         'sudo'    => 'سودو',
+        'manager' => 'مدیر',
+        'teacher' => 'مدرس',
+        'parent'  => 'والدین',
+        'student' => 'دانش‌جو',
 
         'colors' => [
-            'user'    => 'gray',
-            'manager' => 'info',
-            'system'  => 'warning',
+            'system'  => 'danger',
             'sudo'    => 'danger',
+            'manager' => 'success',
+            'teacher' => 'info',
+            'parent'  => 'warning',
+            'student' => 'gray',
         ],
     ],
 ];

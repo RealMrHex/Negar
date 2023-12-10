@@ -11,7 +11,6 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use Modules\Project\Entities\V1\Project\ProjectFields;
 use Modules\Security\Entities\V1\Permission\RoleFields;
 use Modules\Support\Contracts\V1\Schema\Schema;
 use Modules\Support\Enums\V1\Entities\Entities;
@@ -30,71 +29,75 @@ class UserSchema extends Schema
     {
         return [
             TextInput::make(UserFields::MOBILE)
+                     ->modularTranslate(self::module())
                      ->unique(ignoreRecord: true)
                      ->extraAttributes(['dir' => 'ltr'])
-                     ->requiredWithout(UserFields::EMAIL)
-                     ->translateLabel(),
+                     ->disabled(fn(string $operation, ?Model $record = null) => $operation === 'edit' && $record?->{UserFields::ACCOUNT_TYPE}->classified())
+                     ->requiredWithout(UserFields::EMAIL),
 
             TextInput::make(UserFields::EMAIL)
+                     ->modularTranslate(self::module())
                      ->unique(ignoreRecord: true)
                      ->extraAttributes(['dir' => 'ltr'])
                      ->requiredWithout(UserFields::MOBILE)
+                     ->disabled(fn(string $operation, ?Model $record = null) => $operation === 'edit' && $record?->{UserFields::ACCOUNT_TYPE}->classified())
                      ->translateLabel(),
 
             TextInput::make(UserFields::USERNAME)
+                     ->modularTranslate(self::module())
                      ->unique(ignoreRecord: true)
-                     ->extraAttributes(['dir' => 'ltr'])
-                     ->translateLabel(),
+                     ->disabled(fn(string $operation, ?Model $record = null) => $operation === 'edit' && $record?->{UserFields::ACCOUNT_TYPE}->classified())
+                     ->extraAttributes(['dir' => 'ltr']),
 
             TextInput::make(UserFields::PASSWORD)
-                     ->translateLabel()
+                     ->modularTranslate(self::module())
                      ->extraAttributes(['dir' => 'ltr'])
                      ->password()
-                     ->hint(fn(string $operation): ?string => $operation === 'edit' ? __('Leave it empty if no changes needed') : null)
+                     ->disabled(fn(string $operation, ?Model $record = null) => $operation === 'edit' && $record?->{UserFields::ACCOUNT_TYPE}->classified())
+                     ->hint(fn(string $operation): ?string => $operation === 'edit' ? __('v1.user::filament.password.hint.edit') : null)
                      ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
                      ->dehydrated(fn(?string $state): bool => filled($state))
                      ->required(fn(string $operation): bool => $operation === 'create'),
 
             Select::make(UserFields::ACCOUNT_TYPE)
-                  ->translateLabel()
+                  ->modularTranslate(self::module())
                   ->native(false)
                   ->required()
                   ->disabled(fn(string $operation): bool => $operation !== 'create')
                   ->options(fn(string $operation): Collection => $operation === 'create' ? AccountType::createablePairs() : AccountType::pairs())
                   ->hintIcon('heroicon-o-exclamation-circle')
-                  ->hintIconTooltip(__('Only Manager accounts are able to see this panel')),
+                  ->hintIconTooltip(__('v1.user::filament.account_type.hint.tooltip')),
 
             Select::make(UserFields::ACCOUNT_STATUS)
-                  ->translateLabel()
+                  ->modularTranslate(self::module())
                   ->native(false)
                   ->required()
                   ->disabled(fn(string $operation): bool => $operation !== 'create')
                   ->options(fn(string $operation): Collection => $operation === 'create' ? AccountStatus::createablePairs() : AccountStatus::pairs())
                   ->hintIcon('heroicon-o-exclamation-circle')
-                  ->hintIconTooltip(__('Only Free accounts are able to authenticate')),
+                  ->hintIconTooltip(__('v1.user::filament.account_status.hint.tooltip')),
 
             DateTimePicker::make(UserFields::EMAIL_VERIFIED_AT)
-                          ->translateLabel()
+                          ->modularTranslate(self::module())
                           ->hiddenOn('create')
-                          ->placeholder(__('Not verified'))
                           ->disabled()
                           ->displayFormat('l d F Y - H:i:s')
                           ->closeOnDateSelection()
                           ->jalali(),
 
             DateTimePicker::make(UserFields::MOBILE_VERIFIED_AT)
-                          ->translateLabel()
+                          ->modularTranslate(self::module())
                           ->hiddenOn('create')
-                          ->placeholder(__('Not verified'))
                           ->disabled()
                           ->displayFormat('l d F Y - H:i:s')
                           ->closeOnDateSelection()
                           ->jalali(),
 
             Select::make(UserFields::ROLES)
-                  ->translateLabel()
+                  ->modularTranslate(self::module())
                   ->relationship(Entities::Role->table(), RoleFields::DISPLAY_NAME)
                   ->options(v1_role()->all()->pluck(RoleFields::DISPLAY_NAME, RoleFields::ID))
+                  ->disabled(fn(string $operation, ?Model $record = null) => $operation === 'edit' && $record?->{UserFields::ACCOUNT_TYPE}->classified())
                   ->searchable()
                   ->multiple()
                   ->minItems(1)
@@ -112,26 +115,26 @@ class UserSchema extends Schema
     {
         return [
             TextColumn::make(UserFields::ID)
-                      ->translateLabel(),
+                      ->modularLabel(self::module()),
 
             TextColumn::make(UserFields::MOBILE)
-                      ->translateLabel()
+                      ->modularLabel(self::module())
                       ->searchable()
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::MOBILE}) ? Color::Blue : false)
-                      ->default(__('Not Entered'))
+                ->default(__('v1.user::filament.global.not_entered'))
                       ->extraAttributes(['dir' => 'ltr']),
 
             TextColumn::make(UserFields::EMAIL)
-                      ->translateLabel()
+                      ->modularLabel(self::module())
                       ->searchable()
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::EMAIL}) ? Color::Blue : false)
-                      ->default(__('Not Entered'))
+                      ->default(__('v1.user::filament.global.not_entered'))
                       ->extraAttributes(['dir' => 'ltr']),
 
             TextColumn::make(UserFields::USERNAME)
-                      ->translateLabel()
+                      ->modularLabel(self::module())
                       ->searchable()
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::USERNAME}) ? Color::Blue : false)
@@ -140,20 +143,20 @@ class UserSchema extends Schema
                       ->extraAttributes(['dir' => 'ltr']),
 
             TextColumn::make(UserFields::ACCOUNT_TYPE)
-                      ->translateLabel()
+                      ->modularLabel(self::module())
                       ->badge()
                       ->color(fn(Model $record) => $record->{UserFields::ACCOUNT_TYPE}->color())
                       ->formatStateUsing(fn(Model $record) => $record->{UserFields::ACCOUNT_TYPE}->trans()),
 
             TextColumn::make(UserFields::ACCOUNT_STATUS)
-                      ->translateLabel()
+                      ->modularLabel(self::module())
                       ->badge()
                       ->color(fn(Model $record) => $record->{UserFields::ACCOUNT_STATUS}->color())
                       ->formatStateUsing(fn(Model $record) => $record->{UserFields::ACCOUNT_STATUS}->trans()),
 
             TextColumn::make(UserFields::CREATED_AT)
-                      ->translateLabel()
-                      ->formatStateUsing(fn(Model $record): string => jdate($record->created_at)->format('Y/m/d'))
+                      ->modularLabel(self::module())
+                      ->jalaliDate()
                       ->description(fn(Model $record): string => jdate($record->created_at)->ago()),
         ];
     }
