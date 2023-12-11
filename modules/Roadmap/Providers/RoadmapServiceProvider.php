@@ -3,6 +3,8 @@
 namespace Modules\Roadmap\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Roadmap\Contracts\V1\RoadmapRepository\RoadmapRepository;
+use Modules\Roadmap\Repositories\V1\RoadmapRepository\RoadmapEloquentRepository;
 
 class RoadmapServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,6 @@ class RoadmapServiceProvider extends ServiceProvider
      */
     private function registerRepositories(): void
     {
-        // No code is better than no code.
+        $this->app->register(RoadmapRepository::class, RoadmapEloquentRepository::class);
     }
 }
