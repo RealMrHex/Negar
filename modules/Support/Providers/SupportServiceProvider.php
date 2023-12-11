@@ -5,11 +5,37 @@ namespace Modules\Support\Providers;
 use Filament\Forms\Components\Component;
 use Filament\Tables\Columns\Column;
 use Illuminate\Support\ServiceProvider;
+use Modules\Support\Console\V1\Panic\Venus;
 use Throwable;
 
 class SupportServiceProvider extends ServiceProvider
 {
     public function boot(): void
+    {
+        $this->registerCommands();
+        $this->registerFilamentMacros();
+    }
+
+    /**
+     * Register Support commands
+     *
+     * @return void
+     */
+    private function registerCommands(): void
+    {
+        $this->commands(
+            [
+                Venus::class,
+            ]
+        );
+    }
+
+    /**
+     * Register filament macros
+     *
+     * @return void
+     */
+    private function registerFilamentMacros(): void
     {
         Component::macro('modularTranslate', function (string $module, string $key = null, int $version = null)
         {
