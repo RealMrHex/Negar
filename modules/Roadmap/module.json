@@ -1,0 +1,16 @@
+{
+    "id": "Roadmap",
+    "title": "Roadmap Module",
+    "version": 0.1,
+    "name": "Roadmap",
+    "alias": "roadmap",
+    "description": "Roadmap module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Roadmap\\Providers\\RoadmapServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}
