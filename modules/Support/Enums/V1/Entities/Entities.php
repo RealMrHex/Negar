@@ -6,18 +6,10 @@ use Illuminate\Support\Str;
 
 enum Entities: string
 {
-    case Modelable         = 'modelable';
-    case User              = 'user';
-    case Project           = 'project';
-    case ProjectUser       = 'project_user';
-    case Profile           = 'profile';
-    case Role              = 'role';
-    case Permission        = 'permission';
-    case CarManufacturer   = 'car manufacturer';
-    case CarModel          = 'car model';
-    case Car               = 'car';
-    case ManufacturerModel = 'car_manufacturer_car_model';
-
+    case User       = 'user';
+    case Roadmap    = 'roadmap';
+    case Role       = 'role';
+    case Permission = 'permission';
     #region Logic
 
     /**

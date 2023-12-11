@@ -52,19 +52,19 @@ class RoleResource extends Resource implements HasShieldPermissions
                                             ->schema(
                                                 [
                                                     TextInput::make('name')
-                                                             ->modularLabel('security')
+                                                             ->modularLabel('security', 'security')
                                                              ->unique(ignoreRecord: true)
                                                              ->required()
                                                              ->maxLength(255),
 
                                                     TextInput::make('display_name')
-                                                             ->modularLabel('security')
+                                                             ->modularLabel('security', 'security')
                                                              ->unique(ignoreRecord: true)
                                                              ->required()
                                                              ->maxLength(255),
 
                                                     TextInput::make('guard_name')
-                                                             ->modularLabel('security')
+                                                             ->modularLabel('security', 'security')
                                                              ->default(Utils::getFilamentAuthGuard())
                                                              ->nullable()
                                                              ->maxLength(255),
@@ -231,20 +231,20 @@ class RoleResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('name')
-                                                   ->modularLabel('security')
+                                                   ->modularLabel('security', 'security')
                                                    ->formatStateUsing(fn($state): string => Str::headline($state))
                                                    ->colors(['primary'])
                                                    ->searchable(),
 
                           Tables\Columns\TextColumn::make('display_name')
                                                    ->badge()
-                                                   ->modularLabel('security')
+                                                   ->modularLabel('security', 'security')
                                                    ->formatStateUsing(fn($state): string => Str::headline($state))
                                                    ->colors(['primary'])
                                                    ->searchable(),
 
                           Tables\Columns\TextColumn::make('guard_name')
-                                                   ->modularLabel('security'),
+                                                   ->modularLabel('security', 'security'),
 
                           Tables\Columns\TextColumn::make('permissions_count')
                                                    ->badge()

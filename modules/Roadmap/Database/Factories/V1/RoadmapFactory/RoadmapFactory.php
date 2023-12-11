@@ -4,7 +4,7 @@ namespace Modules\Roadmap\Database\Factories\V1\RoadmapFactory;
 
 use Modules\Base\Database\Factory\V1\BaseFactory\BaseFactory;
 
-class RoadmapFactory.php extends BaseFactory
+class RoadmapFactory extends BaseFactory
 {
     /**
      * Get the target model

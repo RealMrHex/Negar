@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\User\Policies;
+namespace Modules\Roadmap\Policies;
 
 use Modules\Base\Policies\V1\CleanPolicy\CleanPolicy;
 
-class UserPolicy extends CleanPolicy
+class RoadmapPolicy extends CleanPolicy
 {
     /**
      * Get the unique key
@@ -13,6 +13,6 @@ class UserPolicy extends CleanPolicy
      */
     protected function key(): string
     {
-        return 'v1_user';
+        return 'v1_roadmap';
     }
 }

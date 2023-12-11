@@ -37,24 +37,24 @@ class SupportServiceProvider extends ServiceProvider
      */
     private function registerFilamentMacros(): void
     {
-        Component::macro('modularTranslate', function (string $module, string $key = null, int $version = null)
+        Component::macro('modularTranslate', function (string $module, string $resource, string $key = null, int $version = null)
         {
-            return $this->modularLabel($module, $key, $version)
-                        ->modularPlaceholder($module, $key, $version)
+            return $this->modularLabel($module, $resource, $key, $version)
+                        ->modularPlaceholder($module, $resource, $key, $version)
             ;
         });
 
-        Component::macro('modularLabel', function (string $module, string $key = null, int $version = null)
+        Component::macro('modularLabel', function (string $module, string $resource, string $key = null, int $version = null)
         {
             try
             {
                 if (empty($key))
-                    $key = 'filament.' . $this->getName();
+                    $key = $this->getName();
 
                 if (empty($version))
                     $version = config('framework.max_versioned_file', 1);
 
-                $this->label(__("v$version.$module::$key.label"));
+                $this->label(__("v$version.$module::filament.$resource.$key.label"));
             }
             catch (Throwable $exception)
             {
@@ -64,17 +64,17 @@ class SupportServiceProvider extends ServiceProvider
             return $this;
         });
 
-        Column::macro('modularLabel', function (string $module, string $key = null, int $version = null)
+        Column::macro('modularLabel', function (string $module, string $resource, string $key = null, int $version = null)
         {
             try
             {
                 if (empty($key))
-                    $key = 'filament.' . $this->getName();
+                    $key = $this->getName();
 
                 if (empty($version))
                     $version = config('framework.max_versioned_file', 1);
 
-                $this->label(__("v$version.$module::$key.label"));
+                $this->label(__("v$version.$module::filament.$resource.$key.label"));
             }
             catch (Throwable $exception)
             {
@@ -84,19 +84,19 @@ class SupportServiceProvider extends ServiceProvider
             return $this;
         });
 
-        Component::macro('modularPlaceholder', function (string $module, string $key = null, int $version = null)
+        Component::macro('modularPlaceholder', function (string $module, string $resource, string $key = null, int $version = null)
         {
             try
             {
                 if (empty($key))
-                    $key = 'filament.' . $this->getName();
+                    $key = $this->getName();
 
                 if (empty($version))
                     $version = config('framework.max_versioned_file', 1);
 
-                $placeholder = __("v$version.$module::$key.placeholder");
+                $placeholder = __("v$version.$module::filament.$resource.$key.placeholder");
                 if (empty($placeholder))
-                    $placeholder = __("v$version.$module::filament.global.placeholder", ['key' => __("v$version.$module::$key.label")]);
+                    $placeholder = __("v$version.$module::filament.global.placeholder", ['key' => __("v$version.$module::filament.$resource.$key.label")]);
 
                 if (method_exists($this, 'placeholder'))
                     $this->placeholder($placeholder);

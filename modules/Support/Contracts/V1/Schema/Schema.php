@@ -19,6 +19,29 @@ abstract class Schema
     }
 
     /**
+     * Get the current module
+     *
+     * @return string
+     */
+    protected static function resource(): string
+    {
+        return str(class_basename(get_called_class()))->replaceLast('Schema', '')->lower()->toString();
+    }
+
+    /**
+     * Get the translation keys
+     *
+     * @return array
+     */
+    protected static function keys(): array
+    {
+        return [
+            self::module(),
+            self::resource()
+        ];
+    }
+
+    /**
      * Design the form schema
      *
      * @return array

@@ -414,7 +414,7 @@ class Venus extends Command
     {
         $this->process(
             path     : 'Database/Factories/{{ VERSION }}/{{ MODEL }}Factory',
-            file     : '{{ MODEL }}Factory.php',
+            file     : '{{ MODEL }}Factory',
             extension: 'php',
             stub     : 'factory',
             replacers: [

@@ -25,6 +25,6 @@ class RoadmapServiceProvider extends ServiceProvider
      */
     private function registerRepositories(): void
     {
-        $this->app->register(RoadmapRepository::class, RoadmapEloquentRepository::class);
+        $this->app->bind(RoadmapRepository::class, RoadmapEloquentRepository::class);
     }
 }
