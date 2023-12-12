@@ -1,0 +1,16 @@
+{
+    "id": "Analytic",
+    "title": "Analytic Module",
+    "version": 0.1,
+    "name": "Analytic",
+    "alias": "analytic",
+    "description": "Analytic module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Analytic\\Providers\\AnalyticServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}

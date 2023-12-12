@@ -7,5 +7,6 @@
     "Security": true,
     "User": true,
     "Roadmap": true,
-    "Course": true
+    "Course": true,
+    "Analytic": true
 }
