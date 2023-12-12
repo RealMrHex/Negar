@@ -8,6 +8,7 @@ enum Entities: string
 {
     case User       = 'user';
     case Roadmap    = 'roadmap';
+    case Course     = 'course';
     case Role       = 'role';
     case Permission = 'permission';
     #region Logic
