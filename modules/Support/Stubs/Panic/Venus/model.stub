@@ -2,9 +2,10 @@
 
 namespace {{ NAMESPACE }};
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Entities\V1\BaseModel;
-use Modules\Course\Database\Factories\V1\{{ MODEL }}Factory\{{ MODEL }}Factory;
+use {{ BASE_NAMESPACE }}\Database\Factories\V1\{{ MODEL }}Factory\{{ MODEL }}Factory;
 
 class {{ CLASS }} extends BaseModel
 {

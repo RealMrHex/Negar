@@ -356,9 +356,10 @@ class Venus extends Command
             array_merge(
                 $replacers,
                 [
-                    '{{ CLASS }}'     => $this->safe($file),
-                    '{{ NAMESPACE }}' => $_namespace,
-                    '{{ MODEL }}'     => $this->safe('{{ MODEL }}'),
+                    '{{ CLASS }}'          => $this->safe($file),
+                    '{{ NAMESPACE }}'      => $_namespace,
+                    '{{ MODEL }}'          => $this->safe('{{ MODEL }}'),
+                    '{{ BASE_NAMESPACE }}' => $this->namespace(),
                 ]
             )
         );
@@ -590,11 +591,14 @@ class Venus extends Command
      * @return string
      * @throws Exception
      */
-    protected function namespace(string $append): string
+    protected function namespace(string $append = null): string
     {
         try
         {
-            return (config('modules.namespace') . '\\' . $this->module()->getStudlyName() . '\\' . $this->safe($append));
+            $append = isset($append) ? ('\\' . $this->safe($append)) : '';
+
+            return (
+                config('modules.namespace') . '\\' . $this->module()->getStudlyName() . $append);
         }
         catch (Throwable $exception)
         {
