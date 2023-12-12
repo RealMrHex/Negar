@@ -6,5 +6,6 @@
     "Panel": true,
     "Security": true,
     "User": true,
-    "Roadmap": true
+    "Roadmap": true,
+    "Course": true
 }

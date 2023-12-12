@@ -1,0 +1,16 @@
+{
+    "id": "Course",
+    "title": "Course Module",
+    "version": 0.1,
+    "name": "Course",
+    "alias": "course",
+    "description": "Course module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Course\\Providers\\CourseServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}
