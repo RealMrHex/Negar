@@ -27,6 +27,8 @@ class ManagerPanelProvider extends PanelProvider
             ->id('manager')
             ->path('manager')
             ->login()
+            ->darkModeBrandLogo(asset('logo/type-dark.svg'))
+            ->brandLogo(asset('logo/type-light.svg'))
             ->colors($this->colors())
             ->pages($this->pages())
             ->font('Dana-FaNum') // todo: do not use a local font

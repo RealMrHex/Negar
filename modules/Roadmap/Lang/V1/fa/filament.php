@@ -9,8 +9,8 @@ return [
 
     'resource' => [
         'roadmap' => [
-            'singular' => 'نقشه راه',
-            'plural'   => 'نقشه‌های راه',
+            'singular' => 'مسیر راه',
+            'plural'   => 'مسیرهای راه',
         ],
     ],
 
