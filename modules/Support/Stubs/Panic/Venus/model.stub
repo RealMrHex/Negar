@@ -4,6 +4,7 @@ namespace {{ NAMESPACE }};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Entities\V1\BaseModel;
+use Modules\Course\Database\Factories\V1\{{ MODEL }}Factory\{{ MODEL }}Factory;
 
 class {{ CLASS }} extends BaseModel
 {
@@ -29,4 +30,17 @@ class {{ CLASS }} extends BaseModel
     protected $casts = [
         #{{ MODEL }}Fields::CREATED_AT => 'datetime',
     ];
+
+    /**
+     * Get a new factory instance for the model.
+     *
+     * @param callable|array|int|null $count
+     * @param callable|array          $state
+     *
+     * @return Factory<static>
+     */
+    public static function factory($count = null, $state = []): Factory
+    {
+        return {{ MODEL }}Factory::new();
+    }
 }
