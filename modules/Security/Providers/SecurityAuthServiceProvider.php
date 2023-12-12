@@ -4,8 +4,11 @@ namespace Modules\Security\Providers;
 
 
 use Gate;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
 use Modules\Security\Policies\V1\RolePolicy\RolePolicy;
+use Modules\User\Entities\V1\User\UserFields;
+use Modules\User\Enums\V1\AccountType\AccountType;
 use Spatie\Permission\Models\Role;
 
 class SecurityAuthServiceProvider extends AuthServiceProvider
@@ -23,5 +26,11 @@ class SecurityAuthServiceProvider extends AuthServiceProvider
     {
         Gate::before(function ($user, $ability, $arguments) {});
         Gate::after(function ($user, $ability, $result, $arguments) {});
+
+        // todo: refactor pulse gate. it's not belongs to here.
+        Gate::define('viewPulse', function (Model $user)
+        {
+            return $user->{UserFields::ACCOUNT_TYPE} === AccountType::Manager;
+        });
     }
 }
