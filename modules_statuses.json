@@ -8,5 +8,6 @@
     "User": true,
     "Roadmap": true,
     "Course": true,
-    "Analytic": true
+    "Analytic": true,
+    "Category": true
 }

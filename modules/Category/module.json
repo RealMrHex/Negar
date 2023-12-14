@@ -1,0 +1,16 @@
+{
+    "id": "Category",
+    "title": "Category Module",
+    "version": 0.1,
+    "name": "Category",
+    "alias": "category",
+    "description": "Category module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Category\\Providers\\CategoryServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}
