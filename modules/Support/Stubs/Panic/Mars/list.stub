@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\User\Filament\Manager\Resources\UserResource\Pages;
+namespace {{ NAMESPACE }};
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use Modules\User\Filament\Manager\Resources\UserResource;
+use {{ RESOURCE_NAMESPACE }};
 
-class ListUsers extends ListRecords
+class {{ RESOURCE }} extends ListRecords
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = {{ RESOURCE_BASE }}Resource::class;
 
     /**
      * Get header actions

@@ -11,6 +11,7 @@ enum Entities: string
     case Course     = 'course';
     case Role       = 'role';
     case Permission = 'permission';
+    case Leak = 'leak';
     #region Logic
 
     /**

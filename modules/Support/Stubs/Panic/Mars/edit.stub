@@ -1,0 +1,24 @@
+<?php
+
+namespace {{ NAMESPACE }};
+
+use Filament\Resources\Pages\EditRecord;
+use Filament\Actions\DeleteAction;
+use {{ $RESOURCE_NAMESPACE }};
+
+class {{ RESOURCE }} extends EditRecord
+{
+    protected static string $resource = {{ RESOURCE_BASE }}Resource::class;
+
+    /**
+     * Get header actions
+     *
+     * @return array
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+}

@@ -5,6 +5,7 @@ namespace Modules\Support\Providers;
 use Filament\Forms\Components\Component;
 use Filament\Tables\Columns\Column;
 use Illuminate\Support\ServiceProvider;
+use Modules\Support\Console\V1\Panic\Mars;
 use Modules\Support\Console\V1\Panic\Venus;
 use Throwable;
 
@@ -26,6 +27,7 @@ class SupportServiceProvider extends ServiceProvider
         $this->commands(
             [
                 Venus::class,
+                Mars::class,
             ]
         );
     }

@@ -1,0 +1,43 @@
+<?php
+
+namespace {{ NAMESPACE }};
+
+use Filament\Forms\Components\Section;
+use Modules\Support\Contracts\V1\Schema\Schema;
+
+class {{ RESOURCE }} extends Schema
+{
+    /**
+     * Design the form schema
+     *
+     * @return array
+     */
+    public static function form(): array
+    {
+        return [];
+    }
+
+    /**
+     * Design the table schema
+     *
+     * @return array
+     */
+    public static function table(): array
+    {
+        return [];
+    }
+
+    /**
+     * Design the wrapped form schema
+     *
+     * @return array
+     */
+    public static function wrappedForm(): array
+    {
+        return [
+            Section::make()
+                   ->columns()
+                   ->schema(self::form()),
+        ];
+    }
+}
