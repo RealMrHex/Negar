@@ -9,6 +9,7 @@ class CourseFields extends BaseFields
     public const ID                      = 'id';
     public const PRIMARY_CATEGORY_ID     = 'primary_category_id';     // course primary category (from categories table)
     public const PRIMARY_TEACHER_ID      = 'primary_teacher_id';      // course primary teacher (from users table)
+    public const SLUG                    = 'slug';                    // course slug
     public const TITLE                   = 'title';                   // course title
     public const PRICE                   = 'price';                   // pure price
     public const OFF_PRICE               = 'off_price';               // off price - will not affect the installments
