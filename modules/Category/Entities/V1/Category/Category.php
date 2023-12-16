@@ -24,6 +24,7 @@ class Category extends BaseModel
         CategoryFields::ID,
         CategoryFields::PARENT_ID,
         CategoryFields::SLUG,
+        CategoryFields::WEIGHT,
         CategoryFields::TITLE,
         CategoryFields::COVER,
         CategoryFields::SOCIAL_PREVIEW,

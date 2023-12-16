@@ -26,6 +26,7 @@ class Roadmap extends BaseModel
         RoadmapFields::WEIGHT,
         RoadmapFields::LOGO,
         RoadmapFields::THUMBNAIL,
+        RoadmapFields::SOCIAL_IMAGE,
         RoadmapFields::DEMO,
         RoadmapFields::TITLE,
         RoadmapFields::DESCRIPTION,

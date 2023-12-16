@@ -44,6 +44,11 @@ return [
             'placeholder' => '',
         ],
 
+        RoadmapFields::SOCIAL_IMAGE => [
+            'label'       => 'تصویر پیش‌نمایش شبکه‌های اجتماعی',
+            'placeholder' => '',
+        ],
+
         RoadmapFields::DEMO => [
             'label'       => 'ویدیو دمو',
             'placeholder' => '',

@@ -23,6 +23,7 @@ return new class extends Migration
                   ->cascadeOnUpdate()
             ;
             $table->string(CategoryFields::SLUG)->unique();
+            $table->integer(CategoryFields::WEIGHT)->unique();
             $table->string(CategoryFields::TITLE);
             $table->string(CategoryFields::COVER);
             $table->string(CategoryFields::SOCIAL_PREVIEW)->nullable();

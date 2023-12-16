@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer(RoadmapFields::WEIGHT)->unique();
             $table->string(RoadmapFields::LOGO);
             $table->string(RoadmapFields::THUMBNAIL);
+            $table->string(RoadmapFields::SOCIAL_IMAGE)->nullable();
             $table->string(RoadmapFields::DEMO)->nullable();
             $table->string(RoadmapFields::TITLE);
             $table->mediumText(RoadmapFields::DESCRIPTION);

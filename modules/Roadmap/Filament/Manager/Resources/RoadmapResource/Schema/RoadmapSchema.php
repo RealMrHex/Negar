@@ -91,6 +91,13 @@ class RoadmapSchema extends Schema
                                                  ->image()
                                                  ->imageEditor(),
 
+                                       FileUpload::make(RoadmapFields::SOCIAL_IMAGE)
+                                                 ->modularLabel(...self::keys())
+                                                 ->required()
+                                                 ->disk(disk())
+                                                 ->image()
+                                                 ->imageEditor(),
+
                                        FileUpload::make(RoadmapFields::DEMO)
                                                  ->modularLabel(...self::keys())
                                                  ->disk(disk())
