@@ -3,6 +3,8 @@
 namespace Modules\Category\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Category\Contracts\V1\CategoryRepository\CategoryRepository;
+use Modules\Category\Repositories\V1\CategoryRepository\CategoryEloquentRepository;
 
 class CategoryServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,7 @@ class CategoryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-       $this->registerRepositories();
+        $this->registerRepositories();
     }
 
     /**
@@ -23,6 +25,6 @@ class CategoryServiceProvider extends ServiceProvider
      */
     private function registerRepositories(): void
     {
-        // No code is better than no code.
+        $this->app->bind(CategoryRepository::class, CategoryEloquentRepository::class);
     }
 }
