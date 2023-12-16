@@ -519,7 +519,7 @@ class Mars extends Command
             path     : 'Filament/{{ PANEL }}/Resources/{{ RESOURCE }}Resource/Pages',
             file     : 'Edit{{ RESOURCE }}',
             extension: 'php',
-            stub     : 'create',
+            stub     : 'edit',
         );
     }
 

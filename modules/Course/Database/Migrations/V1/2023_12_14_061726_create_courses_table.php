@@ -49,7 +49,7 @@ return new class extends Migration
             $table->unsignedInteger(CourseFields::MAXIMUM_CAPACITY);
             $table->timestamp(CourseFields::REGISTRATION_START_DATE)->nullable();
             $table->timestamp(CourseFields::REGISTRATION_END_DATE)->nullable();
-            $table->boolean(CourseFields::AUTO_CANCELLATION);
+            $table->tinyInteger(CourseFields::AUTO_CANCELLATION);
             $table->tinyInteger(CourseFields::STATUS);
             $table->timestamps();
         });

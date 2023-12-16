@@ -1,14 +1,14 @@
 <?php
 
-namespace {{ NAMESPACE }};
+namespace Modules\Course\Filament\Manager\Resources\CourseResource\Pages;
 
 use Filament\Resources\Pages\EditRecord;
 use Filament\Actions\DeleteAction;
-use {{ RESOURCE_NAMESPACE }};
+use Modules\Course\Filament\Manager\Resources\CourseResource;
 
-class {{ RESOURCE }} extends EditRecord
+class EditCourse extends EditRecord
 {
-    protected static string $resource = {{ RESOURCE_BASE }}Resource::class;
+    protected static string $resource = CourseResource::class;
 
     /**
      * Get header actions
