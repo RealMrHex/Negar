@@ -16,5 +16,7 @@ class CategoryFields extends BaseFields
     public const  DESCRIPTION    = 'description';
     public const  CONTENT        = 'content';
     public const  STATUS         = 'status';
+    public const  REL_PARENT     = 'parent';
+    public const  REL_CHILDREN   = 'children';
 
 }

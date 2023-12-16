@@ -8,9 +8,10 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Category\Entities\V1\Category\CategoryFields;
 use Modules\Support\Contracts\V1\Schema\Schema;
-use Modules\Support\Enums\V1\Entities\Entities;
 use Modules\Support\Enums\V1\ToggleStatus\ToggleStatus;
 
 class CategorySchema extends Schema
@@ -49,7 +50,7 @@ class CategorySchema extends Schema
 
                                        Select::make(CategoryFields::PARENT_ID)
                                              ->modularTranslate(...self::keys())
-                                             ->relationship('parent', CategoryFields::TITLE)
+                                             ->relationship(CategoryFields::REL_PARENT, CategoryFields::TITLE)
                                              ->options(v1_category()->all()->pluck(CategoryFields::TITLE, CategoryFields::ID))
                                              ->searchable()
                                              ->native(false),
@@ -112,7 +113,43 @@ class CategorySchema extends Schema
      */
     public static function table(): array
     {
-        return [];
+        return [
+            TextColumn::make(CategoryFields::TITLE)
+                      ->searchable()
+                      ->modularLabel(...self::keys()),
+
+            TextColumn::make(CategoryFields::SLUG)
+                      ->searchable()
+                      ->modularLabel(...self::keys()),
+
+            TextColumn::make(CategoryFields::REL_PARENT . '.' . CategoryFields::TITLE)
+                      ->badge(fn(Model $record) => !$record->{CategoryFields::PARENT_ID})
+                      ->color(fn(Model $record) => $record->{CategoryFields::PARENT_ID} ? 'info' : 'warning')
+                      ->default(__('v1.category::filament.global.is_parent'))
+                      ->label(__('v1.category::filament.category.title.label')),
+
+            TextColumn::make(CategoryFields::WEIGHT)
+                      ->modularLabel(...self::keys()),
+
+            TextColumn::make(CategoryFields::STATUS)
+                      ->modularLabel(...self::keys())
+                      ->badge()
+                      ->icon(fn(Model $model) => $model->{CategoryFields::STATUS} === ToggleStatus::Enabled ? 'heroicon-o-check-circle' : 'heroicon-o-exclamation-circle')
+                      ->color(fn(Model $model) => $model->{CategoryFields::STATUS} === ToggleStatus::Enabled ? 'success' : 'danger')
+                      ->formatStateUsing(fn(Model $model) => $model->{CategoryFields::STATUS}->trans()),
+
+            TextColumn::make(CategoryFields::UPDATED_AT)
+                      ->modularLabel(...self::keys())
+                      ->jalaliDateTime('d F Y - H:i')
+                      ->toggleable()
+                      ->tooltip(fn(Model $record): string => jdate($record->{CategoryFields::UPDATED_AT})->ago()),
+
+            TextColumn::make(CategoryFields::CREATED_AT)
+                      ->modularLabel(...self::keys())
+                      ->jalaliDateTime('d F Y - H:i')
+                      ->toggleable()
+                      ->tooltip(fn(Model $record): string => jdate($record->{CategoryFields::CREATED_AT})->ago()),
+        ];
     }
 
     /**

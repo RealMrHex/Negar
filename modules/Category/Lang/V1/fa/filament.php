@@ -6,6 +6,7 @@ return [
     'global' => [
         'placeholder' => ':key را وارد کنید',
         'not_entered' => 'ثبت نشده',
+        'is_parent'   => 'والد است',
     ],
 
     'resource' => [
@@ -62,6 +63,16 @@ return [
 
         CategoryFields::STATUS => [
             'label'       => 'وضعیت',
+            'placeholder' => '',
+        ],
+
+        CategoryFields::UPDATED_AT => [
+            'label'       => 'آخرین به‌روزرسانی',
+            'placeholder' => '',
+        ],
+
+        CategoryFields::CREATED_AT => [
+            'label'       => 'زمان ایجاد',
             'placeholder' => '',
         ],
     ],
