@@ -7,14 +7,27 @@ use Filament\Tables\Columns\Column;
 use Illuminate\Support\ServiceProvider;
 use Modules\Support\Console\V1\Panic\Mars;
 use Modules\Support\Console\V1\Panic\Venus;
+use Modules\Support\Contracts\V1\Numerify\Numerify;
+use Modules\Support\Services\V1\Numerify\NumerifyService;
 use Throwable;
 
 class SupportServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        $this->registerServices();
         $this->registerCommands();
         $this->registerFilamentMacros();
+    }
+
+    /**
+     * Register services
+     *
+     * @return void
+     */
+    private function registerServices(): void
+    {
+        $this->app->bind(Numerify::class, NumerifyService::class);
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Support\Contracts\V1\Numerify\Numerify;
+
 if (!function_exists('disk'))
 {
     /**
@@ -10,5 +12,18 @@ if (!function_exists('disk'))
     function disk(): string
     {
         return config('filesystems.default');
+    }
+}
+
+if (!function_exists('v1_numerify'))
+{
+    /**
+     * Resolve the numerify service
+     *
+     * @return Numerify
+     */
+    function v1_numerify(): Numerify
+    {
+        return resolve(Numerify::class);
     }
 }

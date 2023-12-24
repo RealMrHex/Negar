@@ -27,6 +27,7 @@ use Closure;
  * @method visible(array $fields);
  * @method scopeQuery(Closure $scope);
  * @method model();
+ * @method latest()
  * @method where(...$fields);
  */
 interface BaseRepositoryInterface

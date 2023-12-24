@@ -5,6 +5,8 @@ namespace Modules\Course\Filament\Manager\Resources\CourseResource\Schema;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -12,8 +14,16 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Category\Entities\V1\Category\CategoryFields;
 use Modules\Course\Entities\V1\Course\CourseFields;
+use Modules\Course\Enums\V1\CourseStatus\CourseStatus;
+use Modules\Season\Entities\V1\Season\SeasonFields;
 use Modules\Support\Contracts\V1\Schema\Schema;
+use Modules\Support\Enums\V1\ToggleStatus\ToggleStatus;
+use Modules\User\Entities\V1\User\UserFields;
+use Modules\User\Enums\V1\AccountType\AccountType;
 
 class CourseSchema extends Schema
 {
@@ -46,11 +56,21 @@ class CourseSchema extends Schema
                                                Select::make(CourseFields::PRIMARY_CATEGORY_ID)
                                                      ->modularTranslate(...self::keys())
                                                      ->required()
+                                                     ->searchable()
+                                                     ->relationship(CourseFields::REL_CATEGORY, CategoryFields::TITLE)
+                                                     ->preload()
                                                      ->native(false),
 
                                                Select::make(CourseFields::PRIMARY_TEACHER_ID)
                                                      ->modularTranslate(...self::keys())
                                                      ->required()
+                                                     ->searchable()
+                                                     ->relationship(
+                                                         name            : CourseFields::REL_TEACHER,
+                                                         modifyQueryUsing: fn(Builder $query) => $query->where(UserFields::ACCOUNT_TYPE, AccountType::Teacher),
+                                                     )
+                                                     ->getOptionLabelFromRecordUsing(fn(Model $record) => $record->name)
+                                                     ->preload()
                                                      ->native(false),
 
                                                TextInput::make(CourseFields::TITLE)
@@ -59,12 +79,13 @@ class CourseSchema extends Schema
 
                                                TextInput::make(CourseFields::SLUG)
                                                         ->modularTranslate(...self::keys())
+                                                        ->unique(ignoreRecord: true)
                                                         ->required(),
                                            ]
                                        ),
 
                                     Tab::make(__('v1.course::filament.course.tabs.pricing'))
-                                        ->icon('heroicon-o-banknotes')
+                                       ->icon('heroicon-o-banknotes')
                                        ->modularTranslate(...self::keys())
                                        ->schema(
                                            [
@@ -73,46 +94,42 @@ class CourseSchema extends Schema
                                                         ->required(),
 
                                                TextInput::make(CourseFields::OFF_PRICE)
-                                                        ->modularTranslate(...self::keys())
-                                                        ->required(),
+                                                        ->modularTranslate(...self::keys()),
 
                                                TextInput::make(CourseFields::INSTALLMENT_PRICE)
-                                                        ->modularTranslate(...self::keys())
-                                                        ->required(),
+                                                        ->modularTranslate(...self::keys()),
 
                                            ]
                                        ),
 
                                     Tab::make(__('v1.course::filament.course.tabs.registration'))
-                                        ->icon('heroicon-o-cursor-arrow-rays')
+                                       ->icon('heroicon-o-cursor-arrow-rays')
                                        ->modularTranslate(...self::keys())
                                        ->schema(
                                            [
                                                TextInput::make(CourseFields::MINIMUM_CAPACITY)
-                                                        ->modularTranslate(...self::keys())
-                                                        ->required(),
+                                                        ->modularTranslate(...self::keys()),
 
                                                TextInput::make(CourseFields::MAXIMUM_CAPACITY)
-                                                        ->modularTranslate(...self::keys())
-                                                        ->required(),
+                                                        ->modularTranslate(...self::keys()),
 
                                                DateTimePicker::make(CourseFields::REGISTRATION_START_DATE)
                                                              ->modularTranslate(...self::keys())
-                                                             ->required(),
+                                                             ->jalali(),
 
                                                DateTimePicker::make(CourseFields::REGISTRATION_END_DATE)
                                                              ->modularTranslate(...self::keys())
-                                                             ->required(),
+                                                             ->jalali(),
 
                                                Select::make(CourseFields::AUTO_CANCELLATION)
                                                      ->modularTranslate(...self::keys())
-                                                     ->required()
+                                                     ->options(ToggleStatus::pairs())
                                                      ->native(false),
                                            ]
                                        ),
 
                                     Tab::make(__('v1.course::filament.course.tabs.content'))
-                                        ->icon('heroicon-o-book-open')
+                                       ->icon('heroicon-o-book-open')
                                        ->modularTranslate(...self::keys())
                                        ->columns(1)
                                        ->schema(
@@ -128,12 +145,12 @@ class CourseSchema extends Schema
                                        ),
 
                                     Tab::make(__('v1.course::filament.course.tabs.config'))
-                                        ->icon('heroicon-o-cog-6-tooth')
+                                       ->icon('heroicon-o-cog-6-tooth')
                                        ->schema(
                                            [
                                                Section::make()
-                                                      ->heading('نحوه دسترسی به دوره')
-                                                      ->description('مشخص کنید که در چه شرایطی امکان دسترسی به دوره وجود دارد')
+                                                      ->heading(__('v1.course::filament.course.section.access.title'))
+                                                      ->description(__('v1.course::filament.course.section.access.description'))
                                                       ->columns(3)
                                                       ->schema(
                                                           [
@@ -152,8 +169,8 @@ class CourseSchema extends Schema
                                                       ),
 
                                                Section::make()
-                                                      ->heading('نحوه برگزاری دوره')
-                                                      ->description('روش های برگزاری دوره را مشخص کنید')
+                                                      ->heading(__('v1.course::filament.course.section.hold.title'))
+                                                      ->description(__('v1.course::filament.course.section.hold.description'))
                                                       ->columns(3)
                                                       ->schema(
                                                           [
@@ -172,8 +189,8 @@ class CourseSchema extends Schema
                                                       ),
 
                                                Section::make()
-                                                      ->heading('نحوه فروش دوره')
-                                                      ->description('تنظیمات مرتبط با فروش دوره و خرید به صورت نقدی و اقساطی')
+                                                      ->heading(__('v1.course::filament.course.section.sale.title'))
+                                                      ->description(__('v1.course::filament.course.section.sale.description'))
                                                       ->columns(3)
                                                       ->schema(
                                                           [
@@ -186,6 +203,52 @@ class CourseSchema extends Schema
                                                                     ->inline(false),
                                                           ]
                                                       ),
+                                           ]
+                                       ),
+
+                                    Tab::make(__('v1.course::filament.course.tabs.episodes'))
+                                       ->icon('heroicon-o-book-open')
+                                       ->columns(1)
+                                       ->schema(
+                                           [
+                                               Repeater::make(CourseFields::REL_SEASONS)
+                                                       ->label(false)
+                                                       ->collapsible()
+                                                       ->deletable()
+                                                       ->collapsed()
+                                                       ->relationship(CourseFields::REL_SEASONS)
+                                                       ->orderColumn(SeasonFields::WEIGHT)
+                                                       ->reorderable()
+                                                       ->reorderableWithButtons()
+                                                       ->itemLabel(
+                                                           function (array $state): ?string
+                                                           {
+                                                               $prefix = __('v1.season::filament.season.prefix');
+                                                               $new    = __('v1.season::filament.season.new');
+                                                               $season = v1_numerify()->convert($state[SeasonFields::WEIGHT]);
+                                                               $title  = $state[SeasonFields::TITLE];
+
+                                                               return $prefix . ' ' . ($season ?? $new) . ($title ? " • $title" : "");
+                                                           }
+                                                       )
+                                                       ->addActionLabel(__('v1.season::filament.season.add_new'))
+                                                       ->columns()
+                                                       ->schema(
+                                                           [
+                                                               Hidden::make(SeasonFields::WEIGHT)->live(),
+
+                                                               TextInput::make(SeasonFields::TITLE)
+                                                                        ->modularTranslate(...self::keys())
+                                                                        ->live(onBlur: true)
+                                                                        ->required(),
+
+                                                               Select::make(SeasonFields::STATUS)
+                                                                     ->modularTranslate(...self::keys())
+                                                                     ->required()
+                                                                     ->options(ToggleStatus::pairs())
+                                                                     ->native(false),
+                                                           ]
+                                                       ),
                                            ]
                                        ),
                                 ]
@@ -209,10 +272,14 @@ class CourseSchema extends Schema
 
                                        TextInput::make(CourseFields::DURATION)
                                                 ->modularTranslate(...self::keys())
+                                                ->mask('99:99:99')
+                                                ->placeholder('HH:MM:SS')
+                                                ->extraAttributes(['dir' => 'ltr'])
                                                 ->required(),
 
                                        Select::make(CourseFields::STATUS)
                                              ->modularTranslate(...self::keys())
+                                             ->options(CourseStatus::pairs())
                                              ->required()
                                              ->native(false),
                                    ]

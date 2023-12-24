@@ -1,0 +1,16 @@
+{
+    "id": "Season",
+    "title": "Season Module",
+    "version": 0.1,
+    "name": "Season",
+    "alias": "season",
+    "description": "Season module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Season\\Providers\\SeasonServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}

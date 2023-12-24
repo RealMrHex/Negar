@@ -9,5 +9,6 @@
     "Roadmap": true,
     "Course": true,
     "Analytic": true,
-    "Category": true
+    "Category": true,
+    "Season": true
 }

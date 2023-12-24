@@ -32,4 +32,8 @@ class CourseFields extends BaseFields
     public const REGISTRATION_END_DATE   = 'registration_end_date';   // date that course is not accept new registration anymore
     public const AUTO_CANCELLATION       = 'auto_cancellation';       // auto cancellation ability for course that does not reach the minimum capacity
     public const STATUS                  = 'status';                  // course status, e.g: 'coming-soon', 'pre-sale', 'in-progress', etc.
+
+    public const REL_CATEGORY = 'category';
+    public const REL_TEACHER  = 'teacher';
+    public const REL_SEASONS  = 'seasons';
 }

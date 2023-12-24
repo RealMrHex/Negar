@@ -10,6 +10,7 @@ enum Entities: string
     case Roadmap    = 'roadmap';
     case Category   = 'category';
     case Course     = 'course';
+    case Season     = 'season';
     case Role       = 'role';
     case Permission = 'permission';
     #region Logic

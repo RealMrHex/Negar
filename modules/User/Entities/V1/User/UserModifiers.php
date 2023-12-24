@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait UserModifiers
 {
+    /**
+     * Get the user's name
+     *
+     * @return Attribute
+     */
     public function name(): Attribute
     {
         return Attribute::make(

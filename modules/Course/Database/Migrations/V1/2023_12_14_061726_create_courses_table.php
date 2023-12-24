@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string(CourseFields::SLUG)->unique();
             $table->string(CourseFields::TITLE);
             $table->unsignedBigInteger(CourseFields::PRICE);
-            $table->unsignedBigInteger(CourseFields::OFF_PRICE);
+            $table->unsignedBigInteger(CourseFields::OFF_PRICE)->nullable();
             $table->unsignedBigInteger(CourseFields::INSTALLMENT_PRICE)->nullable();
             $table->string(CourseFields::DURATION)->nullable();
             $table->string(CourseFields::COVER);
@@ -45,11 +45,11 @@ return new class extends Migration
             $table->boolean(CourseFields::IS_ONLINE);
             $table->boolean(CourseFields::IS_FACE_TO_FACE);
             $table->boolean(CourseFields::IS_OFFLINE);
-            $table->unsignedInteger(CourseFields::MINIMUM_CAPACITY);
-            $table->unsignedInteger(CourseFields::MAXIMUM_CAPACITY);
+            $table->unsignedInteger(CourseFields::MINIMUM_CAPACITY)->nullable();
+            $table->unsignedInteger(CourseFields::MAXIMUM_CAPACITY)->nullable();
             $table->timestamp(CourseFields::REGISTRATION_START_DATE)->nullable();
             $table->timestamp(CourseFields::REGISTRATION_END_DATE)->nullable();
-            $table->tinyInteger(CourseFields::AUTO_CANCELLATION);
+            $table->boolean(CourseFields::AUTO_CANCELLATION);
             $table->tinyInteger(CourseFields::STATUS);
             $table->timestamps();
         });
