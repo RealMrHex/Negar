@@ -6,6 +6,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -301,6 +302,20 @@ class CourseSchema extends Schema
                                                                        ->reorderable()
                                                                        ->reorderableWithButtons()
                                                                        ->columns()
+                                                                       ->collapsed()
+                                                                       ->addActionLabel(__('v1.course::filament.course.add_new_episode'))
+                                                                       ->itemLabel(
+                                                                           function (array $state)
+                                                                           {
+                                                                               $title      = $state[EpisodeFields::TITLE] ?? __('v1.course::filament.global.new_episode');
+                                                                               $underCover = __('v1.course::filament.global.under_cover_of');
+                                                                               $teacher    = $state[EpisodeFields::TEACHER_ID]
+                                                                                   ? v1_user()->find($state[EpisodeFields::TEACHER_ID])->name
+                                                                                   : __('v1.course::filament.global.unknown');
+
+                                                                               return $title . ($state[EpisodeFields::TEACHER_ID] ? " $underCover $teacher" : "");
+                                                                           }
+                                                                       )
                                                                        ->schema(
                                                                            [
                                                                                TextInput::make(EpisodeFields::TITLE)
@@ -310,6 +325,7 @@ class CourseSchema extends Schema
                                                                                         ->required(),
 
                                                                                Select::make(EpisodeFields::TEACHER_ID)
+                                                                                     ->modularTranslate(...self::keys())
                                                                                      ->options(
                                                                                          function (callable $get)
                                                                                          {
@@ -330,50 +346,74 @@ class CourseSchema extends Schema
                                                                                         ->live(onBlur: true)
                                                                                         ->required(),
 
-                                                                               Tabs::make('')
+                                                                               Tabs::make()
                                                                                    ->label(false)
                                                                                    ->columnSpanFull()
                                                                                    ->schema(
                                                                                        [
-                                                                                           Tab::make('base')
+                                                                                           Tab::make(__('v1.course::filament.course.episode.tabs.content'))
+                                                                                              ->icon('heroicon-o-book-open')
                                                                                               ->schema(
                                                                                                   [
-                                                                                                      Select::make(EpisodeFields::TEACHER_ID)
-                                                                                                            ->options(
-                                                                                                                function (callable $get)
-                                                                                                                {
-                                                                                                                    return v1_course()
-                                                                                                                        ->find($get('../../../../id'))
-                                                                                                                        ->{CourseFields::REL_COURSE_USERS}()
-                                                                                                                        ->with(CourseUserFields::REL_USER)
-                                                                                                                        ->get()
-                                                                                                                        ->pluck('user.mobile', 'id')
-                                                                                                                    ;
+                                                                                                      FileUpload::make(EpisodeFields::ATTACHMENT)
+                                                                                                                ->modularTranslate(...self::keys()),
 
-                                                                                                                }
-                                                                                                            )
-                                                                                                            ->required(),
-
-                                                                                                      TextInput::make(EpisodeFields::TITLE)
-                                                                                                               ->modularTranslate(...self::keys())
-                                                                                                               ->live(onBlur: true)
-                                                                                                               ->required(),
-
-                                                                                                      TextInput::make(EpisodeFields::DURATION)
-                                                                                                               ->modularTranslate(...self::keys())
-                                                                                                               ->live(onBlur: true)
-                                                                                                               ->required(),
+                                                                                                      RichEditor::make(EpisodeFields::DESCRIPTION)
+                                                                                                                ->modularTranslate(...self::keys())
+                                                                                                      ,
                                                                                                   ]
                                                                                               ),
 
-                                                                                           Tab::make('content')
-                                                                                              ->schema([]),
+                                                                                           Tab::make(__('v1.course::filament.course.episode.tabs.video_config'))
+                                                                                              ->icon('heroicon-o-video-camera')
+                                                                                              ->schema(
+                                                                                                  [
+                                                                                                      KeyValue::make(EpisodeFields::VIDEO_CONFIG)
+                                                                                                              ->label(false)
+                                                                                                              ->reorderable()
+                                                                                                              ->extraAttributes(['dir' => 'ltr'])
+                                                                                                              ->deletable(),
+                                                                                                  ]
+                                                                                              ),
 
-                                                                                           Tab::make('questions')
-                                                                                              ->schema([]),
+                                                                                           Tab::make(__('v1.course::filament.course.episode.tabs.episode_config'))
+                                                                                              ->icon('heroicon-o-paint-brush')
+                                                                                              ->columns()
+                                                                                              ->schema(
+                                                                                                  [
+                                                                                                      DateTimePicker::make(EpisodeFields::PUBLISHED_AT)
+                                                                                                                    ->modularTranslate(...self::keys())
+                                                                                                                    ->jalali()
+                                                                                                                    ->closeOnDateSelection()
+                                                                                                                    ->required(),
 
-                                                                                           Tab::make('configs')
-                                                                                              ->schema([]),
+                                                                                                      DateTimePicker::make(EpisodeFields::SUBSCRIPTION_ACCESSED_AT)
+                                                                                                                    ->modularTranslate(...self::keys())
+                                                                                                                    ->jalali()
+                                                                                                                    ->closeOnDateSelection()
+                                                                                                                    ->required(),
+
+                                                                                                      DateTimePicker::make(EpisodeFields::PAID_ACCESSED_AT)
+                                                                                                                    ->modularTranslate(...self::keys())
+                                                                                                                    ->jalali()
+                                                                                                                    ->closeOnDateSelection()
+                                                                                                                    ->required(),
+
+                                                                                                      DateTimePicker::make(EpisodeFields::INSTALLMENT_ACCESSED_AT)
+                                                                                                                    ->modularTranslate(...self::keys())
+                                                                                                                    ->jalali()
+                                                                                                                    ->closeOnDateSelection()
+                                                                                                                    ->required(),
+
+                                                                                                      Toggle::make(EpisodeFields::FREE_ACCESS)
+                                                                                                            ->modularTranslate(...self::keys())
+                                                                                                            ->inline(false),
+
+                                                                                                      Toggle::make(EpisodeFields::IS_ACCESSIBLE)
+                                                                                                            ->modularTranslate(...self::keys())
+                                                                                                            ->inline(false),
+                                                                                                  ]
+                                                                                              ),
                                                                                        ]
                                                                                    ),
 

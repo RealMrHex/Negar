@@ -2,15 +2,18 @@
 
 use Modules\Course\Entities\V1\Course\CourseFields;
 use Modules\Course\Entities\V1\CourseUser\CourseUserFields;
+use Modules\Episode\Entities\V1\Episode\EpisodeFields;
 
 return [
     'global' => [
-        'placeholder' => ':key را وارد کنید',
-        'not_entered' => 'ثبت نشده',
-        'unknown'     => 'نامشخص',
-        'user'        => 'کاربر',
-        'commission'  => 'سهم از درامد',
-        'percent'     => 'درصد',
+        'placeholder'    => ':key را وارد کنید',
+        'not_entered'    => 'ثبت نشده',
+        'unknown'        => 'نامشخص',
+        'user'           => 'کاربر',
+        'commission'     => 'سهم از درامد',
+        'percent'        => 'درصد',
+        'under_cover_of' => 'به تدریس',
+        'new_episode'    => 'جلسه جدید',
     ],
 
     'resource' => [
@@ -21,6 +24,14 @@ return [
     ],
 
     'course' => [
+        'episode' => [
+            'tabs' => [
+                'content'        => 'محتوا',
+                'video_config'   => 'تنظیمات ویدیو',
+                'episode_config' => 'تنظیمات جلسه',
+            ],
+        ],
+
         'tabs' => [
             'base'         => 'پایه',
             'pricing'      => 'مالی',
@@ -47,7 +58,53 @@ return [
             ],
         ],
 
-        'add_new_user' => 'افزودن کاربر جدید',
+        'add_new_user'    => 'افزودن کاربر جدید',
+        'add_new_episode' => 'افزودن جلسه جدید',
+
+        EpisodeFields::TEACHER_ID => [
+            'label'       => 'مدرس جلسه',
+            'placeholder' => 'مدرس جلسه را انتخاب کنید',
+        ],
+
+        EpisodeFields::ATTACHMENT => [
+            'label'       => 'پیوست',
+            'placeholder' => '',
+        ],
+
+        EpisodeFields::DESCRIPTION => [
+            'label'       => 'توضیحات',
+            'placeholder' => '',
+        ],
+
+        EpisodeFields::VIDEO_CONFIG => [
+            'label'       => 'تنظیمات ویدیو',
+            'placeholder' => '',
+        ],
+
+        EpisodeFields::PUBLISHED_AT => [
+            'label'       => 'زمان انتشار اولیه',
+            'placeholder' => 'زمان انتشار اولیه',
+        ],
+
+        EpisodeFields::SUBSCRIPTION_ACCESSED_AT => [
+            'label'       => 'زمان دسترسی کاربران اشتراکی',
+            'placeholder' => 'زمان دسترسی کاربران اشتراکی',
+        ],
+
+        EpisodeFields::PAID_ACCESSED_AT => [
+            'label'       => 'زمان دسترسی خریداران',
+            'placeholder' => 'زمان دسترسی خریداران',
+        ],
+
+        EpisodeFields::INSTALLMENT_ACCESSED_AT => [
+            'label'       => 'زمان دسترسی خریداران اقساطی',
+            'placeholder' => 'زمان دسترسی خریداران اقساطی',
+        ],
+
+        EpisodeFields::IS_ACCESSIBLE => [
+            'label'       => 'در دسترس',
+            'placeholder' => '',
+        ],
 
         CourseUserFields::USER_ID => [
             'label'       => 'کاربر مربوطه',
