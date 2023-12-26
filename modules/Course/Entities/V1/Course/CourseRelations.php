@@ -2,29 +2,18 @@
 
 namespace Modules\Course\Entities\V1\Course;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait CourseRelations
 {
     /**
-     * Get the course category
+     * Get the course users
      *
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function category(): BelongsTo
+    public function courseUsers(): HasMany
     {
-        return $this->belongsTo(v1_category()->model(), CourseFields::PRIMARY_CATEGORY_ID);
-    }
-
-    /**
-     * Get the course teacher
-     *
-     * @return BelongsTo
-     */
-    public function teacher(): BelongsTo
-    {
-        return $this->belongsTo(v1_user()->model(), CourseFields::PRIMARY_TEACHER_ID);
+        return $this->hasMany(v1_course_user()->model());
     }
 
     /**

@@ -1,0 +1,15 @@
+{
+    "name": "realmrhex/episode-module",
+    "description": "Episode module by Armin Hooshmand",
+    "authors": [
+        {
+            "name": "Armin Hooshmand",
+            "email": "RealMrHex@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modules\\Episode\\": ""
+        }
+    }
+}

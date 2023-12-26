@@ -22,8 +22,6 @@ class Course extends BaseModel
      */
     protected $fillable = [
         CourseFields::ID,
-        CourseFields::PRIMARY_CATEGORY_ID,
-        CourseFields::PRIMARY_TEACHER_ID,
         CourseFields::SLUG,
         CourseFields::TITLE,
         CourseFields::PRICE,

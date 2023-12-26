@@ -18,16 +18,6 @@ return new class extends Migration
         Schema::create(Entities::Course->table(), function (Blueprint $table)
         {
             $table->id();
-            $table->foreignId(CourseFields::PRIMARY_CATEGORY_ID)
-                  ->constrained(Entities::Category->table(), CategoryFields::ID)
-                  ->cascadeOnUpdate()
-                  ->cascadeOnDelete()
-            ;
-            $table->foreignId(CourseFields::PRIMARY_TEACHER_ID)
-                  ->constrained(Entities::User->table(), UserFields::ID)
-                  ->cascadeOnUpdate()
-                  ->cascadeOnDelete()
-            ;
             $table->string(CourseFields::SLUG)->unique();
             $table->string(CourseFields::TITLE);
             $table->unsignedBigInteger(CourseFields::PRICE);

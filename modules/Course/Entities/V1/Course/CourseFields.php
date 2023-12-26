@@ -7,8 +7,6 @@ use Modules\Base\Entities\V1\Fields\BaseFields\BaseFields;
 class CourseFields extends BaseFields
 {
     public const ID                      = 'id';
-    public const PRIMARY_CATEGORY_ID     = 'primary_category_id';     // course primary category (from categories table)
-    public const PRIMARY_TEACHER_ID      = 'primary_teacher_id';      // course primary teacher (from users table)
     public const SLUG                    = 'slug';                    // course slug
     public const TITLE                   = 'title';                   // course title
     public const PRICE                   = 'price';                   // pure price
@@ -32,8 +30,6 @@ class CourseFields extends BaseFields
     public const REGISTRATION_END_DATE   = 'registration_end_date';   // date that course is not accept new registration anymore
     public const AUTO_CANCELLATION       = 'auto_cancellation';       // auto cancellation ability for course that does not reach the minimum capacity
     public const STATUS                  = 'status';                  // course status, e.g: 'coming-soon', 'pre-sale', 'in-progress', etc.
-
-    public const REL_CATEGORY = 'category';
-    public const REL_TEACHER  = 'teacher';
-    public const REL_SEASONS  = 'seasons';
+    public const REL_SEASONS             = 'seasons';
+    public const REL_COURSE_USERS         = 'courseUsers';
 }

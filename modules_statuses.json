@@ -10,5 +10,6 @@
     "Course": true,
     "Analytic": true,
     "Category": true,
-    "Season": true
+    "Season": true,
+    "Episode": true
 }

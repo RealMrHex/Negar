@@ -1,11 +1,10 @@
 <?php
 
-namespace Modules\Season\Entities\V1\Season;
+namespace Modules\Course\Entities\V1\CourseUser;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait SeasonRelations
+trait CourseUserRelations
 {
     /**
      * Get the related course
@@ -18,12 +17,12 @@ trait SeasonRelations
     }
 
     /**
-     * Get the related episodes
+     * Get the related user
      *
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function episodes(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(v1_episode()->model());
+        return $this->belongsTo(v1_user()->model());
     }
 }

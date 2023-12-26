@@ -11,8 +11,10 @@ enum Entities: string
     case Category   = 'category';
     case Course     = 'course';
     case Season     = 'season';
+    case Episode    = 'episode';
     case Role       = 'role';
     case Permission = 'permission';
+    case CourseUser = 'course user';
     #region Logic
 
     /**

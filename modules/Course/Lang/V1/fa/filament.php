@@ -1,11 +1,16 @@
 <?php
 
 use Modules\Course\Entities\V1\Course\CourseFields;
+use Modules\Course\Entities\V1\CourseUser\CourseUserFields;
 
 return [
     'global' => [
         'placeholder' => ':key را وارد کنید',
         'not_entered' => 'ثبت نشده',
+        'unknown'     => 'نامشخص',
+        'user'        => 'کاربر',
+        'commission'  => 'سهم از درامد',
+        'percent'     => 'درصد',
     ],
 
     'resource' => [
@@ -20,9 +25,9 @@ return [
             'base'         => 'پایه',
             'pricing'      => 'مالی',
             'registration' => 'ثبت‌نام',
-            'content'      => 'محتوا',
             'config'       => 'تنظیمات',
             'episodes'     => 'جلسات',
+            'users'        => 'کاربران',
         ],
 
         'section' => [
@@ -42,18 +47,25 @@ return [
             ],
         ],
 
+        'add_new_user' => 'افزودن کاربر جدید',
+
+        CourseUserFields::USER_ID => [
+            'label'       => 'کاربر مربوطه',
+            'placeholder' => 'کاربر مربوطه را انتخاب کنید',
+        ],
+
+        CourseUserFields::COMMISSION => [
+            'label'       => 'سهم از درامد',
+            'placeholder' => '',
+        ],
+
+        CourseUserFields::ROLE => [
+            'label'       => 'نقش',
+            'placeholder' => 'نقش کاربر را انتخاب کنید',
+        ],
+
         CourseFields::ID => [
             'label' => 'شناسه',
-        ],
-
-        CourseFields::PRIMARY_TEACHER_ID => [
-            'label'       => 'مدرس اصلی',
-            'placeholder' => 'مدرس اصلی دوره را انتخاب کنید',
-        ],
-
-        CourseFields::PRIMARY_CATEGORY_ID => [
-            'label'       => 'دسته‌بندی اصلی',
-            'placeholder' => 'دسته‌بندی اصلی دوره را انتخاب کنید',
         ],
 
         CourseFields::SLUG => [

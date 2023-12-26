@@ -1,0 +1,16 @@
+{
+    "id": "Episode",
+    "title": "Episode Module",
+    "version": 0.1,
+    "name": "Episode",
+    "alias": "episode",
+    "description": "Episode module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Episode\\Providers\\EpisodeServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}

@@ -14,11 +14,11 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Modules\Category\Entities\V1\Category\CategoryFields;
 use Modules\Course\Entities\V1\Course\CourseFields;
+use Modules\Course\Entities\V1\CourseUser\CourseUserFields;
 use Modules\Course\Enums\V1\CourseStatus\CourseStatus;
+use Modules\Course\Enums\V1\CourseUserRole\CourseUserRole;
+use Modules\Episode\Entities\V1\Episode\EpisodeFields;
 use Modules\Season\Entities\V1\Season\SeasonFields;
 use Modules\Support\Contracts\V1\Schema\Schema;
 use Modules\Support\Enums\V1\ToggleStatus\ToggleStatus;
@@ -53,26 +53,6 @@ class CourseSchema extends Schema
                                        ->modularTranslate(...self::keys())
                                        ->schema(
                                            [
-                                               Select::make(CourseFields::PRIMARY_CATEGORY_ID)
-                                                     ->modularTranslate(...self::keys())
-                                                     ->required()
-                                                     ->searchable()
-                                                     ->relationship(CourseFields::REL_CATEGORY, CategoryFields::TITLE)
-                                                     ->preload()
-                                                     ->native(false),
-
-                                               Select::make(CourseFields::PRIMARY_TEACHER_ID)
-                                                     ->modularTranslate(...self::keys())
-                                                     ->required()
-                                                     ->searchable()
-                                                     ->relationship(
-                                                         name            : CourseFields::REL_TEACHER,
-                                                         modifyQueryUsing: fn(Builder $query) => $query->where(UserFields::ACCOUNT_TYPE, AccountType::Teacher),
-                                                     )
-                                                     ->getOptionLabelFromRecordUsing(fn(Model $record) => $record->name)
-                                                     ->preload()
-                                                     ->native(false),
-
                                                TextInput::make(CourseFields::TITLE)
                                                         ->modularTranslate(...self::keys())
                                                         ->required(),
@@ -81,6 +61,87 @@ class CourseSchema extends Schema
                                                         ->modularTranslate(...self::keys())
                                                         ->unique(ignoreRecord: true)
                                                         ->required(),
+
+                                               RichEditor::make(CourseFields::SHORT_DESCRIPTION)
+                                                         ->columnSpanFull()
+                                                         ->modularTranslate(...self::keys())
+                                                         ->required(),
+
+                                               RichEditor::make(CourseFields::LONG_DESCRIPTION)
+                                                         ->columnSpanFull()
+                                                         ->modularTranslate(...self::keys())
+                                                         ->required(),
+                                           ]
+                                       ),
+
+                                    Tab::make(__('v1.course::filament.course.tabs.users'))
+                                       ->icon('heroicon-o-users')
+                                       ->modularTranslate(...self::keys())
+                                       ->schema(
+                                           [
+                                               Repeater::make(CourseFields::REL_COURSE_USERS)
+                                                       ->minItems(1)
+                                                       ->label(false)
+                                                       ->columnSpanFull()
+                                                       ->columns(3)
+                                                       ->collapsible()
+                                                       ->deletable()
+                                                       ->relationship(CourseFields::REL_COURSE_USERS)
+                                                       ->orderColumn(CourseUserFields::WEIGHT)
+                                                       ->reorderable()
+                                                       ->reorderableWithButtons()
+                                                       ->addActionLabel(__('v1.course::filament.course.add_new_user'))
+                                                       ->itemLabel(
+                                                           function (array $state): ?string
+                                                           {
+                                                               $commission      = $state[CourseUserFields::COMMISSION] ?? __('v1.course::filament.global.unknown');
+                                                               $commissionTrans = __('v1.course::filament.global.commission');
+                                                               $percentTrans    = __('v1.course::filament.global.percent');
+
+                                                               $role = isset($state[CourseUserFields::ROLE])
+                                                                   ? CourseUserRole::tryFrom($state[CourseUserFields::ROLE])->trans()
+                                                                   : __('v1.course::filament.global.user');
+
+                                                               $user = $state[CourseUserFields::USER_ID]
+                                                                   ? v1_user()->find($state[CourseUserFields::USER_ID])->name
+                                                                   : __('v1.course::filament.global.unknown');
+
+                                                               return "$role • $user - $commissionTrans $commission $percentTrans";
+                                                           }
+                                                       )
+                                                       ->schema(
+                                                           [
+                                                               Select::make(CourseUserFields::ROLE)
+                                                                     ->modularTranslate(...self::keys())
+                                                                     ->required()
+                                                                     ->native(false)
+                                                                     ->searchable()
+                                                                     ->preload()
+                                                                     ->live(onBlur: true)
+                                                                     ->options(CourseUserRole::pairs()),
+
+                                                               Select::make(CourseUserFields::USER_ID)
+                                                                     ->modularTranslate(...self::keys())
+                                                                     ->required()
+                                                                     ->native(false)
+                                                                     ->searchable()
+                                                                     ->preload()
+                                                                     ->live(onBlur: true)
+                                                                     ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                                                     ->options(
+                                                                         v1_user()
+                                                                             ->where(UserFields::ACCOUNT_TYPE, AccountType::Teacher)
+                                                                             ->get()
+                                                                             ->pluck(UserFields::MOBILE, UserFields::ID)
+                                                                     ),
+
+                                                               TextInput::make(CourseUserFields::COMMISSION)
+                                                                        ->modularTranslate(...self::keys())
+                                                                        ->numeric()
+                                                                        ->live(onBlur: true)
+                                                                        ->required(),
+                                                           ]
+                                                       ),
                                            ]
                                        ),
 
@@ -121,26 +182,8 @@ class CourseSchema extends Schema
                                                              ->modularTranslate(...self::keys())
                                                              ->jalali(),
 
-                                               Select::make(CourseFields::AUTO_CANCELLATION)
-                                                     ->modularTranslate(...self::keys())
-                                                     ->options(ToggleStatus::pairs())
-                                                     ->native(false),
-                                           ]
-                                       ),
-
-                                    Tab::make(__('v1.course::filament.course.tabs.content'))
-                                       ->icon('heroicon-o-book-open')
-                                       ->modularTranslate(...self::keys())
-                                       ->columns(1)
-                                       ->schema(
-                                           [
-                                               RichEditor::make(CourseFields::SHORT_DESCRIPTION)
-                                                         ->modularTranslate(...self::keys())
-                                                         ->required(),
-
-                                               RichEditor::make(CourseFields::LONG_DESCRIPTION)
-                                                         ->modularTranslate(...self::keys())
-                                                         ->required(),
+                                               Toggle::make(CourseFields::AUTO_CANCELLATION)
+                                                     ->modularTranslate(...self::keys()),
                                            ]
                                        ),
 
@@ -209,17 +252,19 @@ class CourseSchema extends Schema
                                     Tab::make(__('v1.course::filament.course.tabs.episodes'))
                                        ->icon('heroicon-o-book-open')
                                        ->columns(1)
+                                       ->hiddenOn('create')
                                        ->schema(
                                            [
                                                Repeater::make(CourseFields::REL_SEASONS)
                                                        ->label(false)
                                                        ->collapsible()
                                                        ->deletable()
-                                                       ->collapsed()
                                                        ->relationship(CourseFields::REL_SEASONS)
                                                        ->orderColumn(SeasonFields::WEIGHT)
                                                        ->reorderable()
                                                        ->reorderableWithButtons()
+                                                       ->addActionLabel(__('v1.season::filament.season.add_new'))
+                                                       ->columns()
                                                        ->itemLabel(
                                                            function (array $state): ?string
                                                            {
@@ -231,8 +276,6 @@ class CourseSchema extends Schema
                                                                return $prefix . ' ' . ($season ?? $new) . ($title ? " • $title" : "");
                                                            }
                                                        )
-                                                       ->addActionLabel(__('v1.season::filament.season.add_new'))
-                                                       ->columns()
                                                        ->schema(
                                                            [
                                                                Hidden::make(SeasonFields::WEIGHT)->live(),
@@ -247,6 +290,95 @@ class CourseSchema extends Schema
                                                                      ->required()
                                                                      ->options(ToggleStatus::pairs())
                                                                      ->native(false),
+
+                                                               Repeater::make(SeasonFields::REL_EPISODES)
+                                                                       ->columnSpanFull()
+                                                                       ->label(false)
+                                                                       ->collapsible()
+                                                                       ->deletable()
+                                                                       ->relationship(SeasonFields::REL_EPISODES)
+                                                                       ->orderColumn(EpisodeFields::WEIGHT)
+                                                                       ->reorderable()
+                                                                       ->reorderableWithButtons()
+                                                                       ->columns()
+                                                                       ->schema(
+                                                                           [
+                                                                               TextInput::make(EpisodeFields::TITLE)
+                                                                                        ->columnSpanFull()
+                                                                                        ->modularTranslate(...self::keys())
+                                                                                        ->live(onBlur: true)
+                                                                                        ->required(),
+
+                                                                               Select::make(EpisodeFields::TEACHER_ID)
+                                                                                     ->options(
+                                                                                         function (callable $get)
+                                                                                         {
+                                                                                             return v1_course()
+                                                                                                 ->find($get('../../../../id'))
+                                                                                                 ->{CourseFields::REL_COURSE_USERS}()
+                                                                                                 ->with(CourseUserFields::REL_USER)
+                                                                                                 ->get()
+                                                                                                 ->pluck('user.mobile', 'id')
+                                                                                             ;
+
+                                                                                         }
+                                                                                     )
+                                                                                     ->required(),
+
+                                                                               TextInput::make(EpisodeFields::DURATION)
+                                                                                        ->modularTranslate(...self::keys())
+                                                                                        ->live(onBlur: true)
+                                                                                        ->required(),
+
+                                                                               Tabs::make('')
+                                                                                   ->label(false)
+                                                                                   ->columnSpanFull()
+                                                                                   ->schema(
+                                                                                       [
+                                                                                           Tab::make('base')
+                                                                                              ->schema(
+                                                                                                  [
+                                                                                                      Select::make(EpisodeFields::TEACHER_ID)
+                                                                                                            ->options(
+                                                                                                                function (callable $get)
+                                                                                                                {
+                                                                                                                    return v1_course()
+                                                                                                                        ->find($get('../../../../id'))
+                                                                                                                        ->{CourseFields::REL_COURSE_USERS}()
+                                                                                                                        ->with(CourseUserFields::REL_USER)
+                                                                                                                        ->get()
+                                                                                                                        ->pluck('user.mobile', 'id')
+                                                                                                                    ;
+
+                                                                                                                }
+                                                                                                            )
+                                                                                                            ->required(),
+
+                                                                                                      TextInput::make(EpisodeFields::TITLE)
+                                                                                                               ->modularTranslate(...self::keys())
+                                                                                                               ->live(onBlur: true)
+                                                                                                               ->required(),
+
+                                                                                                      TextInput::make(EpisodeFields::DURATION)
+                                                                                                               ->modularTranslate(...self::keys())
+                                                                                                               ->live(onBlur: true)
+                                                                                                               ->required(),
+                                                                                                  ]
+                                                                                              ),
+
+                                                                                           Tab::make('content')
+                                                                                              ->schema([]),
+
+                                                                                           Tab::make('questions')
+                                                                                              ->schema([]),
+
+                                                                                           Tab::make('configs')
+                                                                                              ->schema([]),
+                                                                                       ]
+                                                                                   ),
+
+                                                                           ]
+                                                                       ),
                                                            ]
                                                        ),
                                            ]
@@ -263,6 +395,12 @@ class CourseSchema extends Schema
                                ->columns(1)
                                ->schema(
                                    [
+                                       TextInput::make(CourseFields::TITLE)
+                                                ->modularTranslate(...self::keys())
+                                                ->readOnly()
+                                                ->disabled()
+                                                ->required(),
+
                                        FileUpload::make(CourseFields::COVER)
                                                  ->modularLabel(...self::keys())
                                                  ->required()

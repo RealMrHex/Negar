@@ -22,6 +22,7 @@ class UserTableSeeder extends Seeder
             ->system()
             ->sudo()
             ->manager()
+            ->teacher()
         ;
     }
 
@@ -92,7 +93,7 @@ class UserTableSeeder extends Seeder
     /**
      * Create Manager User
      */
-    private function manager(): void
+    private function manager(): self
     {
         v1_user()->create(
             [
@@ -107,5 +108,25 @@ class UserTableSeeder extends Seeder
             ],
         );
 
+        return $this;
+    }
+
+    /**
+     * Create Teacher User
+     */
+    private function teacher(): void
+    {
+        v1_user()->create(
+            [
+                UserFields::EMAIL              => 'teacher@' . $this->domain() . $this->tld(),
+                UserFields::MOBILE             => '09101234567',
+                UserFields::USERNAME           => 'teacher',
+                UserFields::PASSWORD           => bcrypt('password'),
+                UserFields::ACCOUNT_TYPE       => AccountType::Teacher,
+                UserFields::ACCOUNT_STATUS     => AccountStatus::Free,
+                UserFields::MOBILE_VERIFIED_AT => Carbon::now(),
+                UserFields::EMAIL_VERIFIED_AT  => Carbon::now(),
+            ],
+        );
     }
 }
