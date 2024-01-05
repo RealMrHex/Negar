@@ -100,7 +100,7 @@ trait CleanResource
      */
     public static function modelLabel(): string
     {
-        return static::$modelLabel ?? static::getLabel() ?? get_model_label(static::getModel());
+        return static::$modelLabel ?? static::getLabel() ?? str(get_model_label(static::getModel()))->snake();
     }
 
     /**

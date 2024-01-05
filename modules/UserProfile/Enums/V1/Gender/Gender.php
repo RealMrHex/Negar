@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\User\Enums\V1\Gender;
+namespace Modules\UserProfile\Enums\V1\Gender;
 
 use Modules\Support\Traits\V1\CleanEnum\CleanEnum;
 

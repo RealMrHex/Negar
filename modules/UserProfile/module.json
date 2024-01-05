@@ -1,0 +1,17 @@
+{
+    "id": "UserProfile",
+    "title": "UserProfile Module",
+    "version": 0.1,
+    "name": "UserProfile",
+    "alias": "userprofile",
+    "description": "UserProfile module by Armin Hooshmand",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\UserProfile\\Providers\\UserProfileServiceProvider",
+        "Modules\\UserProfile\\Providers\\UserProfileEventServiceProvider"
+    ],
+    "files": [
+        "Helpers/V1/helpers.php"
+    ]
+}

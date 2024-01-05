@@ -27,4 +27,6 @@ class UserFields extends BaseFields
     public const ACCESS_TOKEN          = 'token';
     public const ROLES                 = 'roles';
     public const PERMISSIONS           = 'permissions';
+    public const REL_PROFILE           = 'profile';
+    public const ATTR_NAME             = 'name';
 }

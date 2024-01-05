@@ -25,7 +25,7 @@ abstract class Schema
      */
     protected static function resource(): string
     {
-        return str(class_basename(get_called_class()))->replaceLast('Schema', '')->lower()->toString();
+        return str(class_basename(get_called_class()))->replaceLast('Schema', '')->snake()->lower()->toString();
     }
 
     /**

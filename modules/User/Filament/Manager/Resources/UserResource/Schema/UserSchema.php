@@ -122,16 +122,14 @@ class UserSchema extends Schema
                       ->searchable()
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::MOBILE}) ? Color::Blue : false)
-                ->default(__('v1.user::filament.global.not_entered'))
-                      ->extraAttributes(['dir' => 'ltr']),
+                      ->default(__('v1.user::filament.global.not_entered')),
 
             TextColumn::make(UserFields::EMAIL)
                       ->modularLabel(...self::keys())
                       ->searchable()
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::EMAIL}) ? Color::Blue : false)
-                      ->default(__('v1.user::filament.global.not_entered'))
-                      ->extraAttributes(['dir' => 'ltr']),
+                      ->default(__('v1.user::filament.global.not_entered')),
 
             TextColumn::make(UserFields::USERNAME)
                       ->modularLabel(...self::keys())
@@ -139,8 +137,7 @@ class UserSchema extends Schema
                       ->copyable()
                       ->color(fn(Model $record) => isset($record->{UserFields::USERNAME}) ? Color::Blue : false)
                       ->default(__('Not Entered'))
-                      ->prefix(fn(Model $record) => isset($record->{UserFields::USERNAME}) ? '@' : null)
-                      ->extraAttributes(['dir' => 'ltr']),
+                      ->prefix(fn(Model $record) => isset($record->{UserFields::USERNAME}) ? '@' : null),
 
             TextColumn::make(UserFields::ACCOUNT_TYPE)
                       ->modularLabel(...self::keys())
@@ -157,7 +154,7 @@ class UserSchema extends Schema
             TextColumn::make(UserFields::CREATED_AT)
                       ->modularLabel(...self::keys())
                       ->jalaliDate()
-                      ->description(fn(Model $record): string => jdate($record->created_at)->ago()),
+                      ->description(fn(Model $record): string => jdate($record->{UserFields::CREATED_AT})->ago()),
         ];
     }
 

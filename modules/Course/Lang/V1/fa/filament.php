@@ -239,5 +239,15 @@ return [
             'label'       => 'وضعیت',
             'placeholder' => '',
         ],
+
+        CourseFields::CREATED_AT => [
+            'label'       => 'زمان ایجاد',
+            'placeholder' => '',
+        ],
+
+        CourseFields::UPDATED_AT => [
+            'label'       => 'آخرین بروزرسانی',
+            'placeholder' => '',
+        ],
     ],
 ];

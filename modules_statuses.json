@@ -11,5 +11,6 @@
     "Analytic": true,
     "Category": true,
     "Season": true,
-    "Episode": true
+    "Episode": true,
+    "UserProfile": true
 }

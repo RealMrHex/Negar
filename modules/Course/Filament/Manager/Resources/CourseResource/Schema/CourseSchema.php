@@ -15,6 +15,9 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Course\Entities\V1\Course\CourseFields;
 use Modules\Course\Entities\V1\CourseUser\CourseUserFields;
 use Modules\Course\Enums\V1\CourseStatus\CourseStatus;
@@ -104,7 +107,7 @@ class CourseSchema extends Schema
                                                                    : __('v1.course::filament.global.user');
 
                                                                $user = $state[CourseUserFields::USER_ID]
-                                                                   ? v1_user()->find($state[CourseUserFields::USER_ID])->name
+                                                                   ? v1_user()->find($state[CourseUserFields::USER_ID])->{UserFields::ATTR_NAME}
                                                                    : __('v1.course::filament.global.unknown');
 
                                                                return "$role • $user - $commissionTrans $commission $percentTrans";
@@ -133,7 +136,7 @@ class CourseSchema extends Schema
                                                                          v1_user()
                                                                              ->where(UserFields::ACCOUNT_TYPE, AccountType::Teacher)
                                                                              ->get()
-                                                                             ->pluck(UserFields::MOBILE, UserFields::ID)
+                                                                             ->pluck(UserFields::ATTR_NAME, UserFields::ID)
                                                                      ),
 
                                                                TextInput::make(CourseUserFields::COMMISSION)
@@ -310,7 +313,7 @@ class CourseSchema extends Schema
                                                                                $title      = $state[EpisodeFields::TITLE] ?? __('v1.course::filament.global.new_episode');
                                                                                $underCover = __('v1.course::filament.global.under_cover_of');
                                                                                $teacher    = $state[EpisodeFields::TEACHER_ID]
-                                                                                   ? v1_user()->find($state[EpisodeFields::TEACHER_ID])->name
+                                                                                   ? v1_user()->find($state[EpisodeFields::TEACHER_ID])->{UserFields::ATTR_NAME}
                                                                                    : __('v1.course::filament.global.unknown');
 
                                                                                return $title . ($state[EpisodeFields::TEACHER_ID] ? " $underCover $teacher" : "");
@@ -356,6 +359,7 @@ class CourseSchema extends Schema
                                                                                               ->schema(
                                                                                                   [
                                                                                                       FileUpload::make(EpisodeFields::ATTACHMENT)
+                                                                                                                ->disk(disk())
                                                                                                                 ->modularTranslate(...self::keys()),
 
                                                                                                       RichEditor::make(EpisodeFields::DESCRIPTION)
@@ -475,7 +479,30 @@ class CourseSchema extends Schema
      */
     public static function table(): array
     {
-        return [];
+        return [
+            ImageColumn::make(CourseFields::COVER)
+                       ->modularLabel(...self::keys()),
+
+            TextColumn::make(CourseFields::TITLE)
+                      ->searchable()
+                      ->modularLabel(...self::keys()),
+
+            TextColumn::make(CourseFields::STATUS)
+                      ->modularLabel(...self::keys())
+                      ->badge()
+                      ->color(fn(Model $record) => $record->{CourseFields::STATUS}->color())
+                      ->formatStateUsing(fn(Model $record) => $record->{CourseFields::STATUS}->trans()),
+
+            TextColumn::make(CourseFields::CREATED_AT)
+                      ->modularLabel(...self::keys())
+                      ->jalaliDate()
+                      ->description(fn(Model $record): string => jdate($record->{CourseFields::CREATED_AT})->ago()),
+
+            TextColumn::make(CourseFields::UPDATED_AT)
+                      ->modularLabel(...self::keys())
+                      ->jalaliDate()
+                      ->description(fn(Model $record): string => jdate($record->{CourseFields::UPDATED_AT})->ago()),
+        ];
     }
 
     /**
