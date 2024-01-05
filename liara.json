@@ -1,5 +1,6 @@
 {
     "platform": "laravel",
+    "app": "arvand",
     "laravel": {
         "phpVersion": "8.2"
     }
