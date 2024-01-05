@@ -1,0 +1,6 @@
+{
+    "platform": "laravel",
+    "laravel": {
+        "phpVersion": "8.2"
+    }
+}

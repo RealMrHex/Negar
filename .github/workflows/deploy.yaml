@@ -1,0 +1,88 @@
+name: Negar CI
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Define shot uid
+        run: |
+          COMMIT_SHORT_HASH=$(git rev-parse --short HEAD)
+          echo "COMMIT_SHORT_HASH=$COMMIT_SHORT_HASH" >> $GITHUB_ENV
+
+      - name: SMS notify owner before deployment
+        env:
+          SMS_API_KEY: ${{ secrets.SMS_API_TOKEN }}
+          PATTERN: ${{ vars.SMS_PATTERN_NOTIFY_DEPLOY_DYNAMIC }}
+          ORIGINATOR: ${{ vars.SMS_ORIGINATOR }}
+          RECIPIENT: ${{ vars.OWNER_MOBILE }}
+          PROJECT: ${{ vars.PROJECT_NAME }}
+          STAGE: ${{ vars.STAGE_DEVELOP }}
+          FIRSTNAME: ${{ vars.OWNER_FIRSTNAME }}
+          STATUS: ${{ vars.STATUS_STARTED }}
+          HASH: ${{ env.COMMIT_SHORT_HASH }}
+        run: |
+          COMMIT_SHORT_HASH=$(git log -1 --pretty=%h)
+          echo "COMMIT_SHORT_HASH=$COMMIT_SHORT_HASH" >> $GITHUB_ENV
+          curl -X POST https://rest.ippanel.com/v1/messages/patterns/send \
+          -H "Content-Type: application/json" \
+          -H "Authorization: AccessKey $SMS_API_KEY" \
+          -d '{
+            "pattern_code": "${{ env.PATTERN }}",
+            "originator": "${{ env.ORIGINATOR }}",
+            "recipient": "${{ env.RECIPIENT }}",
+            "values": {
+              "project-name": "${{ env.PROJECT }}",
+              "stage": "${{ env.STAGE}}",
+              "firstname": "${{ env.FIRSTNAME }}",
+              "hash": "${{ env.HASH }}",
+              "status": "${{ env.STATUS }}"
+            }
+          }'
+
+      - name: Deploy to stage
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP: ${{ secrets.LIARA_APP_NAME }}
+        run: |
+          npm i -g @liara/cli@5
+          liara deploy --app="$LIARA_APP" --api-token="$LIARA_TOKEN" --no-app-logs
+
+      - name: SMS notify owner after deployment
+        env:
+          SMS_API_KEY: ${{ secrets.SMS_API_TOKEN }}
+          PATTERN: ${{ vars.SMS_PATTERN_NOTIFY_DEPLOY_DYNAMIC }}
+          ORIGINATOR: ${{ vars.SMS_ORIGINATOR }}
+          RECIPIENT: ${{ vars.OWNER_MOBILE }}
+          PROJECT: ${{ vars.PROJECT_NAME }}
+          STAGE: ${{ vars.STAGE_DEVELOP }}
+          FIRSTNAME: ${{ vars.OWNER_FIRSTNAME }}
+          STATUS: ${{ vars.STATUS_FINISHED }}
+          HASH: ${{ env.COMMIT_SHORT_HASH }}
+        run: |
+          COMMIT_SHORT_HASH=$(git log -1 --pretty=%h)
+          echo "COMMIT_SHORT_HASH=$COMMIT_SHORT_HASH" >> $GITHUB_ENV
+          curl -X POST https://rest.ippanel.com/v1/messages/patterns/send \
+          -H "Content-Type: application/json" \
+          -H "Authorization: AccessKey $SMS_API_KEY" \
+          -d '{
+            "pattern_code": "${{ env.PATTERN }}",
+            "originator": "${{ env.ORIGINATOR }}",
+            "recipient": "${{ env.RECIPIENT }}",
+            "values": {
+              "project-name": "${{ env.PROJECT }}",
+              "stage": "${{ env.STAGE}}",
+              "firstname": "${{ env.FIRSTNAME }}",
+              "hash": "${{ env.HASH }}",
+              "status": "${{ env.STATUS }}"
+            }
+          }'
