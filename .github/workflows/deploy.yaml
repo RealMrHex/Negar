@@ -52,10 +52,9 @@ jobs:
       - name: Deploy to stage
         env:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
-          LIARA_APP: ${{ secrets.LIARA_APP_NAME }}
         run: |
           npm i -g @liara/cli@5
-          liara deploy --app="$LIARA_APP" --api-token="$LIARA_TOKEN" --no-app-logs
+          liara deploy --app="arvand" --api-token="$LIARA_TOKEN" --no-app-logs
 
       - name: SMS notify owner after deployment
         env:
