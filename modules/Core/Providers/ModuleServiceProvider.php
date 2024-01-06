@@ -2,27 +2,11 @@
 
 namespace Modules\Core\Providers;
 
-use Illuminate\Support\Facades\URL;
 use Modules\Base\Providers\V1\BaseServiceProvider\BaseServiceProvider;
 use Nwidart\Modules\Laravel\Module;
 
 class ModuleServiceProvider extends BaseServiceProvider
 {
-    /**
-     * Bootstrap any application service
-     *
-     * @return void
-     */
-    public function boot(): void
-    {
-        URL::forceRootUrl(config('app.url'));
-        if (str_contains(config('app.url'), 'https://'))
-        {
-            URL::forceScheme('https');
-            request()->server->set('HTTPS', request()->header('X-Forwarded-Proto', 'https') == 'https' ? 'on' : 'off');
-        }
-    }
-
     /**
      * Bootstrap any application services.
      */
