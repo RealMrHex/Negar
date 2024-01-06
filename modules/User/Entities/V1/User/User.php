@@ -2,6 +2,8 @@
 
 namespace Modules\User\Entities\V1\User;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,7 +13,7 @@ use Modules\User\Enums\V1\AccountStatus\AccountStatus;
 use Modules\User\Enums\V1\AccountType\AccountType;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends BaseAuthenticatableModel
+class User extends BaseAuthenticatableModel implements FilamentUser
 {
     use HasApiTokens,
         HasFactory,

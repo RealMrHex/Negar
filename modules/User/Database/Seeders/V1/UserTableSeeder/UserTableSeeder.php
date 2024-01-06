@@ -43,7 +43,7 @@ class UserTableSeeder extends Seeder
      */
     protected function tld(): string
     {
-        return '.dev';
+        return '.com';
     }
 
     /**
