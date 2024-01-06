@@ -1,6 +1,6 @@
 {
     "platform": "laravel",
-    "app": "ngr",
+    "app": "arvand",
     "laravel": {
         "phpVersion": "8.2"
     }
