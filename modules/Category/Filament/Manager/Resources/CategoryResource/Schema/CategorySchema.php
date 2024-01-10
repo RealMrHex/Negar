@@ -89,7 +89,7 @@ class CategorySchema extends Schema
                                    [
                                        FileUpload::make(CategoryFields::COVER)
                                                  ->modularLabel(...self::keys())
-                                                 ->required()
+                                                 //->required()
                                                  ->disk(disk())
                                                  ->image()
                                                  ->alignCenter(),
