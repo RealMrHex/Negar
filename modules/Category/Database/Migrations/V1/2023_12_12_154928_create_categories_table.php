@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string(CategoryFields::SLUG)->unique();
             $table->integer(CategoryFields::WEIGHT)->unique();
             $table->string(CategoryFields::TITLE);
-            $table->string(CategoryFields::COVER);
+            $table->string(CategoryFields::COVER)->nullable();
             $table->string(CategoryFields::SOCIAL_PREVIEW)->nullable();
             $table->tinyText(CategoryFields::DESCRIPTION);
             $table->longText(CategoryFields::CONTENT);
